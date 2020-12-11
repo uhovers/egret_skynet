@@ -1,0 +1,57 @@
+// oee README.txt for information and build instructions.
+// syntax = "proto2";
+// 通知消息的后缀用Ntc,请求消息Req,响应消息Res
+syntax = "proto2";
+package GameMsg;
+
+message ClientMsgHead {
+    optional int32 msgtype = 1;
+    optional string msgname = 2;
+    optional string svr_id = 3;
+    optional int32 service_address = 4;
+}
+
+message Version {
+    optional int32 platform = 1; //client 平台id(属于哪家公司发行)
+    optional int32 channel = 2; //client 渠道id(发行公司的发行渠道)
+    optional string version = 3; //client 版本号
+    optional int32 authtype = 4; //client 账号类型
+    optional int32 regfrom = 5; //描述从哪里注册过来的?BlackJack21_tablesNtc
+    optional string channel_name = 6; //渠道名字
+}
+
+message GateSvrItem {
+    optional string ip = 1;
+    optional int32 port = 2;
+    optional int32 updatetime = 3;
+    optional int32 onlinenum = 4;
+}
+
+//请求登陆loginsvrd
+message LoginReq {
+    optional Version version = 1;
+    optional string deviceinfo = 2; //设备信息
+    optional string uid = 3; //账号信息
+    optional int32 uidtype = 4; //登录账号类型  1游客(对接新版本的游客) 2手机号 3微信 4账号登陆(对接新版本的账号 手机号用uid发送跟手机号登陆一样)
+    optional string device_uuid = 5; //设备信息
+    optional string only_id = 6; //玩家唯一id 新接入的账号系统
+    optional string thirdtoken = 7;
+    optional string account = 8; //第三方的账号
+    optional string login_ip = 9; //客户端连接的登陆服ip
+}
+
+//响应登陆loginsvrd
+message LoginRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional string uid = 3;
+    optional int32 rid = 4;
+    optional string logintoken = 5; //登录服务器返回的登录token
+    optional int32 expiretime = 6; //过期时间（绝对时间）单位s
+    repeated GateSvrItem gatesvrs = 7; //gate服务器地址列表
+    optional string clientip = 8; //自己的ip地址
+    optional int32 uidtype = 9; //登录类型
+    optional int32 check_code = 10; //登陆时候的key值
+    optional string vercode_pwd = 11; //手机验证码后生成的密码
+    optional string device_uuid = 12; //设备信息
+}

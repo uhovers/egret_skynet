@@ -1,0 +1,5393 @@
+// oee README.txt for information and build instructions.
+// syntax = "proto2";
+// 通知消息的后缀用Ntc,请求消息Req,响应消息Res
+syntax = "proto2";
+package GameMsg;
+
+message ClientMsgHead {
+    optional int32 msgtype = 1;
+    optional string msgname = 2;
+    optional string svr_id = 3;
+    optional int32 service_address = 4;
+}
+
+message Version {
+    optional int32 platform = 1; //client 平台id(属于哪家公司发行)
+    optional int32 channel = 2; //client 渠道id(发行公司的发行渠道)
+    optional string version = 3; //client 版本号
+    optional int32 authtype = 4; //client 账号类型
+    optional int32 regfrom = 5; //描述从哪里注册过来的?BlackJack21_tablesNtc
+    optional string channel_name = 6; //渠道名字
+}
+
+message GateSvrItem {
+    optional string ip = 1;
+    optional int32 port = 2;
+    optional int32 updatetime = 3;
+    optional int32 onlinenum = 4;
+}
+
+message PlayerBaseinfo {
+    optional int32 rid = 1;
+    optional string rolename = 2; //昵称
+    optional string logo = 3; //logo
+    optional string phone = 4; //手机号 --> 第三方账号使用的手机号等，可能和 phone_bind 不一样的
+    optional int32 totalgamenum = 5; //总局数
+    optional int32 winnum = 6; //胜场数
+    optional int32 sex = 7; //性别
+    optional double coins = 8; //通用金币
+    optional int32 diamonds = 9; // 钻石
+    optional int32 highwininseries = 10; //最大连胜局数
+    optional double maxcoinnum = 11; // 最大资产
+    optional int32 base_room_card = 12; //普通房卡
+    optional int32 bind_room_card = 13; //绑定房卡
+    optional int32 club_id = 14; //俱乐部id
+    optional string level_name = 17; //等级称号
+    optional int32 vip_level = 18; //vip等级
+    optional string sign = 19; //签名
+    optional string phone_bind = 20; //绑定手机账号
+    optional int32 is_system_create = 21; //1:为系统创建的账号 0：非系统账号
+    optional int32 player_level = 22; //账号等级
+    optional int32 exp = 23; //当前经验值
+    optional int32 next_level_need_exp = 24; //升级需要的经验值
+    optional string account = 25; //第三方账号
+    optional double e_wallet = 26;//电子钱包
+    optional int32 user_type = 27;//玩家 类型 -1表示游客 0玩家
+    optional string currency = 28; //币种
+}
+
+message TableStateItem {
+    optional int32 id = 1; //table id
+    optional int32 state = 2; //table state
+    optional string name = 3; //桌子名字
+    optional int32 room_type = 4; //房间类型
+    optional int32 game_type = 5; //游戏类型
+    optional int32 max_player_num = 6; //房间支持的最大人数
+    optional int32 cur_player_num = 7; //状态服务器
+    optional int32 retain_to_time = 8; //桌子保留到的时间(linux时间擢)
+    optional int32 create_user_rid = 9; //创建者rid
+    optional string create_user_rolename = 10; //创建者姓名
+    optional int32 create_time = 11; //桌子的创建时间
+    optional string create_table_id = 12; //创建桌子的索引id
+    optional string roomsvr_id = 13; //房间服务器id
+    optional int32 roomsvr_table_address = 14; //桌子table的地址
+    optional int32 action_timeout = 15; //玩家操作限时
+    optional int32 action_timeout_count = 16; //玩家可操作超时次数
+    optional string create_user_logo = 17;
+
+    optional double min_carry_coin = 18;
+    optional double max_carry_coin = 19;
+    optional double base_coin = 20; //基础分
+    optional int32 common_times = 21; //牌级
+
+    optional int32 totalplayernum = 22; //在场次列表中显示在线人数
+    optional int32 distribute_playernum = 23;
+
+    optional int32 round_num = 24; //局数
+
+    optional string rule_name = 25; //玩法 (2人地主 3人地主)
+    repeated string rule_ext_names = 26; //玩法( ..)
+    repeated string max_fan_names = 27; //附加选项
+
+    optional int32 check_type_indexs = 28; // 玩法索引
+    optional int32 play_rule_type = 29; //1郑州麻将 2洛阳
+    optional int32 check_room_index = 30; //(将玩法带回客户端)
+    optional int32 is_review_mode = 31; //是否开启了审核模式
+    optional int32 table_uid = 32;
+    optional int32 is_no_shuffle = 33; // 1不洗牌 0洗牌
+    optional int32 level = 34; // 房间级别
+
+    optional string contest_type = 38; //比赛类型
+
+    optional int32 tickets = 39; //门票
+
+    optional double need_consume_coin = 40; //约局的时候 客户端需要知道进入需要消耗的金币
+    optional float king_wins_card = 41; //礼品券
+
+}
+
+message SeatInfo {
+    optional int32 rid = 1;
+    optional int32 index = 2;
+    optional int32 state = 3;
+    optional int32 is_tuoguan = 4; //1表示是 0表示否
+    optional double coin = 5; //金币
+    optional int32 jdztag = 6; //记录叫地主标识(不叫地址值为0, 1表示叫地主, 2表示抢地主),牛牛中用于区分玩家本轮是否进行过操作
+    optional int32 isdz = 7; //是否是地主
+    optional int32 ready_to_time = 8; //玩家准备到期时间
+    optional int32 cardsnum = 9; // 玩家手牌数量
+    repeated int32 cards = 10; //玩家手中的牌
+    repeated int32 out_cards = 11; //玩家打出去的牌
+    optional int32 curscore = 12; //当前分数
+    optional DoactionNtc actionmesg = 13; //保存当前消息 如果有的话
+    optional int32 is_ming_pai = 14; //0未明牌 1:明牌
+    optional int32 contest_score = 15; //比赛分数
+    optional int32 rank = 16; //比赛排名
+    optional int32 total_player = 17; //人数
+    optional int32 jdz_score = 18; //玩家叫地主的分数(在牛牛中是倍数)
+    optional int32 need_play_num_add_king_card = 19; //还需要参加几局获取礼品券
+    optional int32 call_time = 20; // 此座位被累计下注数
+    optional bool is_see_card = 21; //是否已看牌(诈金花)
+    optional int32 total_score = 23; //该玩家当前付出的总积分数(诈金花)
+    optional int32 gepaonum = 24; // 选择的搁跑数量
+    optional int32 fan_bei_num = 25; //玩家当前游戏倍数
+    optional bool is_gendaodi = 26; //是否选择了跟到底（咋金花）
+    optional bool is_quanya = 27; //是否是全压（咋金花）
+    optional bool is_tanpai = 28; //是否摊牌（抢庄牛牛 true摊牌）
+    optional bool is_taotai = 29; //(炸金花比牌淘汰标志)
+    // 21点
+    repeated int32 cards_1 = 30; //21点第一手牌
+    repeated int32 cards_2 = 31; //21点第二手牌
+    optional double betScores_1 = 32;
+    optional double betScores_2 = 33;
+    optional bool is_buy_insurance = 34;
+    optional double insurance_score = 35;
+    optional bool is_give_up = 36;
+    repeated double limit_range = 37;//限制下注额度
+}
+
+message TablePlayerInfo {
+    optional int32 rid = 1;
+    optional string rolename = 2;
+    optional string logo = 3;
+    optional int32 sex = 4;
+    optional int32 totalgamenum = 5; //总局数
+    optional int32 winnum = 6; //胜场数
+    optional double coins = 7; //金币
+    optional int32 diamonds = 8; // 钻石
+    optional int32 highwininseries = 9; //最大连胜局数
+    optional double maxcoinnum = 10; // 最大资产
+    optional string clientip = 11; //自己的ip地址
+    optional string latitude = 12; //纬度
+    optional string longitude = 13; //经度
+    optional string level_name = 14; //等级称号
+    optional int32 vip_level = 15; //桌子玩家vip等级
+}
+
+//下注信息
+message ChipInfo {
+    optional int32 rid = 1; //下注玩家rid
+    optional int32 score = 2; //下注分数
+}
+
+//一个简洁的统计单位
+message RecordCell {
+    optional int32 id = 1; //编号
+    optional int32 num = 2; //数量、次数等
+}
+
+//百人牛牛每局的胜负统计单位
+message NNRecordCell {
+    optional int32 id = 1; //局数索引
+    repeated RecordCell record = 2; //该局所有玩家的胜负(id为座位号,num为胜负,1胜0负)
+}
+
+//中发白每局的胜负统计单位
+message ZFBRecordCell {
+    optional int32 id = 1; //局数索引
+    repeated RecordCell record = 2; //该局所有玩家的胜负(id为座位号,num为胜负,1胜0负)
+}
+
+message QDZPlayerInfo {
+    optional int32 rid = 1; // 玩家rid
+    optional string rolename = 2; // 玩家rolename
+}
+
+message RankPlayerInfo {
+    optional int32 rid = 1; // 玩家rid
+    optional string rolename = 2; // 玩家rolename
+    optional double coins = 3; // 玩家金币数
+    optional int32 totalbets = 4; // 近20局下注总数
+    optional int32 winnum = 5; // 近20局胜场数
+    optional string logo = 6; // 玩家头像
+    optional double winmoney = 7; // 输赢分数
+    optional int32 vip_level = 8; //vip等级
+}
+
+message GameInfo {
+    optional int32 id = 1; //table id
+    optional int32 state = 2; //table state
+    optional string name = 3; //桌子名字
+    optional int32 room_type = 4; //房间类型
+    optional int32 game_type = 5; //游戏类型
+    optional int32 max_player_num = 6; //房间支持的最大人数
+    optional int32 cur_player_num = 7; //状态服务器
+    optional int32 retain_to_time = 8; //桌子保留到的时间(linux时间擢)
+    optional int32 create_user_rid = 9; //创建者rid
+    optional string create_user_rolename = 10; //创建者姓名
+    optional int32 create_time = 11; //桌子的创建时间
+    optional string create_table_id = 12; //创建桌子的索引id
+    optional string roomsvr_id = 13; //房间服务器id
+    optional int32 roomsvr_table_address = 14; //桌子table的地址
+    optional int32 action_timeout = 15; //玩家操作限时
+    optional int32 action_timeout_count = 16; //玩家可操作超时次数
+    optional string create_user_logo = 17;
+    optional double min_carry_coin = 18;
+    optional double max_carry_coin = 19;
+    optional double base_coin = 20; //基础分
+    optional int32 common_times = 21; //牌级
+    optional int32 all_times = 22;
+    optional int32 action_seat_index = 23; //当前操作玩家的座位号
+    optional int32 action_to_time = 24; //当前操作玩家的到期时间
+    optional int32 action_type = 25;
+    optional int32 dz_seat_index = 26;
+    //下面两个结构按数组下标一一对应
+    repeated SeatInfo seats = 27; //座位
+    repeated TablePlayerInfo tableplayerinfos = 28;
+    repeated int32 actionlist = 29; //各个位置上面的动作
+    optional int32 room_round = 30; //房间局数
+    optional int32 curr_round = 31; //当前局数
+    optional int32 play_rule_type = 32; // 玩法类型(2 3人麻将 传入2,3)
+    optional string rule_name = 33; // 玩法名称
+    optional bool is_club_daikai = 34; //  是否代开房间
+    optional int32 check_room_index = 35; //规则选取
+    optional int32 rang_pai_num = 36; //让牌数
+    optional int32 fan_bei_num = 37; //翻倍数
+    repeated int32 last_cards = 38; //上家出的牌
+    repeated int32 dizhu_dipai = 39; //地主底牌
+    optional int32 call_times = 40; //叫分
+    optional int32 can_use_bomb = 41; //能否使用炸弹 0表示可以使用 1:
+    optional int32 last_cardtype = 42; //上家的牌型(癞子可能会导致多种牌型可能)
+    repeated int32 laizicards = 43; //癞子牌风(癞子斗地主)
+    optional int32 lastcond = 44; //最后一手翻倍的牌型条件(癞子斗地主)
+    optional int32 master_score = 45; //赢家大师分数
+    optional int32 tickets = 46; //门票
+    optional int32 loser_score = 47; //输家的大师分
+
+    optional string contest_type = 60; //比赛类型
+    optional string contest_cfg_uuid = 61;
+    optional string contest_game_uuid = 62;
+    optional string contest_svr_id = 63;
+    optional int32 contest_agent_address = 64;
+    optional int32 contest_di_score = 65; //比赛基础分contest_di_score
+    optional int32 contest_template_id = 66; //比赛配置模板ID
+    optional int32 kick_score = 67; //淘汰分数
+    optional int32 contest_prefer_left_count = 68; //移位赛特有 -- 当前轮期望的晋级人数
+    repeated ChipInfo chiplist = 69; //下注信息列表(诈金花)
+    optional int32 all_score = 70; //当前牌面的总分数(诈金花)
+    optional int32 rounds = 71; //当前的轮数(诈金花)
+    optional int32 count_time = 72; //倒计时的时间点(为中途加入玩家可以正常显示倒计时)
+    repeated int32 wait_call_times = 73; // 当前玩家的下注数据
+    repeated QDZPlayerInfo qdz_players = 74; // 申请上庄的玩家列表
+    repeated RankPlayerInfo rank_list = 75; // 排行榜(牛牛 中发白 百家乐)
+    repeated HHPlayerInfo players = 76; //牌桌上的6个玩家的数据(红黑)
+    repeated HHRoadNode winrecord = 77; //近20局的胜局信息统计(红黑)
+    optional int32 remain_score = 79; //牌桌上剩余分数
+    repeated NNRecordCell nntrend = 80; //近10局的胜负统计(百人牛牛)
+    repeated RoadNode baccarat_road = 81; //百家乐胜负100局
+    optional RankPlayerInfo lucky = 82; //幸运星(牛牛 中发白 百家乐)
+    repeated HHRoadNode hh_road = 83; //红黑写路
+    optional HHPlayerInfo player_info = 84; //红黑 玩家自己的数据
+    repeated ZFBRecordCell zfb_trend = 85; //近10局的胜负统计(中发白)
+
+    repeated LHPlayerInfo lh_players = 86; //牌桌上的6个玩家的数据(龙虎)
+    repeated LHRoadNode lh_winrecord = 87; //近20局的胜局信息统计(龙虎)
+    repeated LHRoadNode lh_road = 88; //写路(龙虎)
+    repeated double bet_nums = 89;//下注列表（21点）
+
+    // 21点
+    optional int32 player_rounds_index = 90;//目前正在操作的玩家座位index,0表示全局操作
+    optional int32 handle_expire = 91;// 操作倒计时,单位:s(秒)
+    optional int32 last_action_type = 92;//最后一个操作类型
+    optional int32 yellow_card_coordinate = 93;//黄卡位置
+    optional int32 remain_cards_count = 94;//最后一个操作类型
+    optional bool is_reach_yellow_card = 95; //是否遇到黄卡
+    optional int32 hand_index = 96;//操作手牌序列
+    repeated int32 limitRange = 97;//下注范围
+    optional string table_round_id = 98;    //牌桌桌号，
+    optional int32 shoe_round_id = 99;     //牌桌一靴局号
+}
+
+message AwardItem {
+    optional int32 id = 1; //物品id --1金币 2钻石 3大师分 4胜王卡 装备根据具体id来定(200一次性看底牌)
+    optional int32 num = 2; //物品数量
+}
+
+message ThirdInfo {
+    optional int32 type_id = 1; //1注册送金 2首充奖励
+    optional int32 status = 2; //(type_id=1 status 1:领取) (type_id=2 status 1:领取)
+}
+
+//获取第三方数据状态
+message GetThirdStatusReq {
+    optional int32 rid = 1;
+}
+
+message GetThirdStatusRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated ThirdInfo info_list = 3;
+}
+
+//提交第三方状态
+message UpdateThirdStatusReq {
+    optional int32 type_id = 1; //1:是否领取了注册奖励
+    optional int32 status = 2; //(type_id=1 status 1:领取)
+}
+
+message UpdateThirdStatusRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+////////////////////////request/////////////////////////
+
+//账号注册请求
+message AccRegReq {
+    optional Version version = 1;
+    optional string deviceinfo = 2; //设备信息
+    optional string uid = 3; //账号信息
+    optional int32 uidtype = 4; //登录账号类型  1游客 2手机号 3微信
+    optional string thirdtoken = 5;
+    optional string username = 6;
+    optional string vercode = 7; //验证码 手机号注册的时候
+}
+//响应账号注册请求
+message AccRegRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional string uid = 3;
+    optional int32 rid = 4;
+    optional string logintoken = 5; //登录服务器返回的登录token
+    optional int32 expiretime = 6; //过期时间（绝对时间）单位s
+    repeated GateSvrItem gatesvrs = 7; //gate服务器地址列表
+    optional string clientip = 8; //自己的ip地址
+}
+
+//账号绑定
+message AccBindReq {
+    optional string uid = 1; //游客账号信息
+    optional int32 uidtype = 2; //登录账号类型  1游客 2手机号 3微信
+    optional string phone = 3; //手机号
+    optional string vercode = 4; //验证码 手机号验证码
+}
+
+message AccBindRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//账号绑定(将现有账号绑定手机并带密码 --> 才能成为真实用户)
+message AccBindPhoneScretReq {
+    optional string uid = 1; //游客账号信息
+    optional int32 uidtype = 2; //登录账号类型  1游客(对接新版本的游客) 2手机号 3微信 4账号登陆(对接新版本的账号)
+    optional string phone = 3; //手机号
+    optional string only_id = 4; //唯一id
+    optional string account = 5; //第三方账号
+}
+
+message AccBindPhoneScretRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+/////////////////////begin 靓号专用消息///////////////////////////
+//靓号修改密码 只有后台创建靓号玩家能够使用
+message LHChangePwdReq {
+    optional string old_pwd = 1; //原始密码
+    optional string new_pwd = 2; //新密码
+}
+
+message LHChangePwdRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+}
+
+//手机号验证码请求
+message LHPhoneCodeReq {
+    optional Version version = 1;
+    optional string phone = 2;
+    optional int32 vercode_type = 3; //1：后台靓号绑定手机号 2：后台靓号解除绑定
+}
+
+//号验证码回复
+message LHPhoneCodeRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional string vercode = 3; //验证码
+}
+
+//绑定手机
+message LHPhoneBindReq {
+    optional string vercode = 1; //验证码
+    optional string phone = 2; //手机号
+}
+
+message LHPhoneBindRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional string phone = 3;
+}
+
+//解绑手机绑定号
+message LHAccDisBindPhoneReq {
+    optional string phone = 1; // 添加解绑手机号码
+    optional string vercode = 2; //验证码 手机号验证码
+}
+
+message LHAccDisBindPhoneRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+}
+/////////////////////end 靓号专用消息///////////////////////////
+
+//修改绑定手机号的密码
+message PhoneScretResetReq {
+    optional string scret = 1; // 新密码
+}
+
+message PhoneScretResetRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//发送手机号验证码请求
+message PhoneVerCodeReq {
+    optional Version version = 1;
+    optional string uid = 2; //账号信息 手机号
+    optional int32 uidtype = 3; //账号类型
+}
+//发送手机号验证码回复
+message PhoneVerCodeRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional string vercode = 3; //验证码
+}
+
+//请求登陆loginsvrd
+message LoginReq {
+    optional Version version = 1;
+    optional string deviceinfo = 2; //设备信息
+    optional string uid = 3; //账号信息
+    optional int32 uidtype = 4; //登录账号类型  1游客(对接新版本的游客) 2手机号 3微信 4账号登陆(对接新版本的账号 手机号用uid发送跟手机号登陆一样)
+    optional string device_uuid = 5; //设备信息
+    optional string only_id = 6; //玩家唯一id 新接入的账号系统
+    optional string thirdtoken = 7;
+    optional string account = 8; //第三方的账号
+    optional string login_ip = 9; //客户端连接的登陆服ip
+}
+
+//响应登陆loginsvrd
+message LoginRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional string uid = 3;
+    optional int32 rid = 4;
+    optional string logintoken = 5; //登录服务器返回的登录token
+    optional int32 expiretime = 6; //过期时间（绝对时间）单位s
+    repeated GateSvrItem gatesvrs = 7; //gate服务器地址列表
+    optional string clientip = 8; //自己的ip地址
+    optional int32 uidtype = 9; //登录类型
+    optional int32 check_code = 10; //登陆时候的key值
+    optional string vercode_pwd = 11; //手机验证码后生成的密码
+    optional string device_uuid = 12; //设备信息
+}
+
+//重置密码
+message LoginResetPwdReq {
+    optional string phone = 1; //绑定的手机号
+    optional string vercode = 2; //验证码
+    optional string new_pwd = 3; //新密码
+}
+
+message LoginResetPwdRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional string new_pwd = 3; //新密码
+}
+
+//修改登陆密码
+message ChangeLoginPwdReq {
+    optional string old_pwd = 1;
+    optional string new_pwd = 2;
+}
+
+message ChangeLoginPwdRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//心跳包请求
+message HeartReq {
+    optional Version version = 1;
+}
+//心跳包响应
+message HeartRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 servertime = 3; //服务器时间
+}
+
+//请求七牛上传token
+message QiniuUploadReq {
+    optional Version version = 1;
+    optional string uploadlogo = 2;
+}
+
+//响应七牛上传token
+message QiniuUploadRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional string uploadtoken = 3;
+}
+
+//请求进入游戏
+message EnterGameReq {
+    optional Version version = 1;
+    optional string device_info = 2; //设备信息
+    optional string uid = 3;
+    optional int32 rid = 4;
+    optional int32 expiretime = 5;
+    optional string logintoken = 6;
+    optional int32 uidtype = 7; // 进入游戏也将账号类型带上
+    optional int32 subchannelId = 9;//
+    optional string third_token = 10;//第三方接口
+}
+
+//响应进入游戏
+message EnterGameRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 isreauth = 3; //是否需要重新认证，断线重连时根据token是否过期告诉client是否需要重新登录认证, 0 ,2表示false<不需要验证>、1表示true
+    optional int32 servertime = 4; //同步服务器时间
+    optional PlayerBaseinfo baseinfo = 5; //下面数据用于判断玩家是否需要牌桌断线重连
+    optional string ip = 6; //gatesvrd的ip
+    optional int32 port = 7; //gatesvrd的port
+    optional string roomsvr_id = 8; //房间服务器id
+    optional int32 roomsvr_table_address = 9; //桌子的服务器地址
+    optional int32 identity_type = 10; //身份认证类型 0 normal  1 实名 2 推广员 3 实名&推广员
+    optional int32 bind_prompter = 11; //绑定的推荐人
+    optional int32 create_club_flag = 12; //为1的时候能够创建俱乐部
+    optional int32 club_owner_rid = 13; //club拥有者id  (为了在用户在大厅界面，判断要不要显示"代开房间"这个按钮，需要判断用户是不是所在俱乐部的房主)
+    optional int32 server_current_mode = 14; // 服务器当前模式 1 normal 2. 提交审核
+    optional int32 unread_mail_num = 15; // 未读取的邮件数量
+    optional int32 previous_room_num = 16; //前一局房间id
+    optional string create_table_id = 17; //创建桌子id
+    optional int32 new_join_daikai_apply_flag = 18; //在创建者上线的时候通知有没有 带开房间申请信息
+    optional string contest_uuid = 19; //正在进行的比赛ID
+    repeated PropRoomInfo limit_room_info = 20; //关闭房间列表
+    repeated PropMoneyPageInfo limit_money_page_info = 21; //充值 提现开关列表
+}
+
+//能够创建俱乐部的时候推送给客户端
+message CreateClubFlagNtc {
+    optional int32 create_club_flag = 1; //当能够创建俱乐部的时候在线玩家会收到该消息  create_club_flag 值为 1
+    optional int32 can_open_club_level = 2; //能够开房间的等级
+}
+
+//实名认证请求
+message RealNameValidateReq {
+    optional string name = 1;
+    optional string id_card = 2;
+}
+message RealNameValidateRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//推广员认证
+message PrompterValidateReq {
+    optional string name = 1;
+    optional string id_card = 2;
+    optional string phone = 3;
+}
+message PrompterValidateRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//推广员验证码认证
+message PrompterValidateCodeReq {
+    optional string name = 1;
+    optional string id_card = 2;
+    optional string phone = 3;
+    optional string validate_code = 4;
+}
+message PrompterValidateCodeRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//邀请码请求
+message BindInviteCodeReq {
+    optional string invite_code = 1; //邀请码
+}
+message BindInviteCodeRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+
+message CardInfo {
+    optional int32 cardtype = 1;
+    repeated int32 cards = 2;
+    optional int32 mingpai_provider = 3;
+}
+
+//请求玩家基本信息
+message PlayerBaseinfoReq {
+    optional Version version = 1;
+    optional int32 rid = 2;
+}
+
+//响应玩家的基本信息
+message PlayerBaseinfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional PlayerBaseinfo baseinfo = 3; //
+}
+
+//请求更新玩家信息
+message UpdateinfoReq {
+    optional Version version = 1;
+    optional string rolename = 2; //昵称
+    optional string logo = 3; //logo
+    optional string phone = 4; //手机号
+    optional int32 sex = 5; //性别
+    optional string sign = 6; //签名
+    optional int32 flag = 7; //修改类型 1登录时获取第三方的 2用户自己设置
+    optional int32 third_topUpSum = 8; //第三方总充值额
+}
+
+//响应更新玩家信息
+message UpdateinfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional string rolename = 3; //昵称
+    optional string logo = 4; //logo
+    optional string phone = 5; //手机号
+    optional int32 sex = 6; //性别
+    optional string sign = 7; //签名
+    optional int32 vip_level = 8; //玩家的vip等级
+}
+
+message UpdatePlayerInfoNtc {
+    optional string level_name = 1; //更新玩家信息
+}
+
+//请求创建朋友桌
+message CreateFriendTableReq {
+    optional Version version = 1;
+    optional int32 action_timeout = 2; //玩家出牌时间
+    optional int32 retain_time = 3; //朋友桌保留时间单位s
+    optional double base_coin = 4; //基础分
+    optional int32 iscontrol = 5; //是否控制申请 1表示是 2表示否
+    optional int32 check_room_index = 6; //规则按位与
+    optional bool is_club_daikai = 7; //是否是俱乐部代开房间
+    optional int32 play_rule_type = 8; //玩法类型(2:2人地主 3:3人地主 4:4人斗地主)
+    optional int32 coin_room_level = 9; //金币场档次（1初级 2中级 3高级）
+}
+
+//请求创建模拟朋友桌
+message CreateMockTableReq {
+    optional string table_uid = 1;
+    optional int32 select_round = 2;
+}
+
+message CreateMockTableRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//响应创建朋友桌
+message CreateFriendTableRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional string create_table_id = 3; //朋友桌索引号
+    optional bool is_club_daikai = 4;
+}
+
+//根据创建桌子号获取桌子状态请求
+message GetTableStateByCreateIdReq {
+    optional Version version = 1;
+    optional string create_table_id = 2;
+}
+
+//根据创建桌子号获取桌子状态响应
+message GetTableStateByCreateIdRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional TableStateItem tablestate = 3; //桌子状态
+}
+
+//取得创建桌列表请求
+message GetFriendTableListReq {
+    optional Version version = 1;
+}
+
+//取得创建桌列表响应
+message GetFriendTableListRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated TableStateItem tablelist = 3; //桌子状态列表
+}
+
+//刷新创建桌列表通知
+message FriendTableListChangeNtc {
+    optional int32 type = 1; // 0 房间解散 1 人数变化
+    optional int32 room_id = 2; //房间id
+}
+
+//取得游戏类型列表
+message GetGameRoomsReq {
+    optional Version version = 1;
+    optional int32 room_type = 2; //房间类型(1经典场)
+}
+
+message GameRoomsInfo {
+    optional int32 room_type = 1; //场次信息 1经典 2欢乐 3癞子 4四人
+    repeated TableStateItem tablestates = 2; //桌子状态列表
+    optional int32 player_num = 3; //玩家人数
+}
+
+//响应游戏类型列表
+message GetGameRoomsRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated GameRoomsInfo rooms_info = 3; //桌子状态列表
+}
+
+//快速开始请求
+message QuickStartReq {
+    optional Version version = 1;
+    optional int32 room_type = 2; //指定快速开始进入指定场次
+    optional int32 id = 3; //指定上一次所在的桌号主要用于快速换桌,如果不需要换桌逻辑填0
+    optional int32 game_type = 4; //游戏类型
+    optional bool is_create = 5; //是否希望新建房间(为true时表示希望新建房间而不是换房)
+}
+
+//响应快速开始
+message QuickStartRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 id = 3;
+    optional string roomsvr_id = 4; //房间服务器id
+    optional int32 roomsvr_table_address = 5; //桌子的服务器地址
+    optional int32 room_type = 6; //指定快速开始进入指定场次
+    optional int32 game_type = 7; //游戏类型
+}
+
+//取消快速开始请求
+message CancelQuickStartReq {
+    optional Version version = 1;
+    optional int32 room_type = 2; //指定快速开始进入指定场次
+    optional int32 game_type = 3; //游戏类型
+}
+
+//响应取消快速开始
+message CancelQuickStartRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//金币场匹配成功的通知
+message GoldRoomMatchNTC {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 id = 3;
+    optional string roomsvr_id = 4; //房间服务器id
+    optional int32 roomsvr_table_address = 5; //桌子的服务器地址
+    optional int32 room_type = 6; //指定快速开始进入指定场次
+    optional int32 game_type = 7; //游戏类型
+}
+
+//比赛场匹配成功的通知
+message ContestRoomMatchNTC {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 id = 3;
+    optional string roomsvr_id = 4; //房间服务器id
+    optional int32 roomsvr_table_address = 5; //桌子的服务器地址
+    optional int32 room_type = 6; //指定快速开始进入指定场次 ROOM_TYPE_CONTEST 9
+    optional int32 game_type = 7; //游戏类型 1
+    optional int32 rid = 8; //玩家唯一ID标识
+}
+
+//创建新手好牌场
+message CreateRobotTableReq {
+    optional Version version = 1;
+}
+//响应新手好牌场
+message CreateRobotTableRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 id = 3;
+    optional string roomsvr_id = 4; //房间服务器id
+    optional int32 roomsvr_table_address = 5; //桌子的服务器地址
+}
+
+//桌主请求开始游戏
+message StartGameReq {
+    optional Version version = 1;
+    optional int32 id = 2;
+    optional string roomsvr_id = 3; //房间服务器id
+    optional int32 roomsvr_table_address = 4; //桌子的服务器地址
+}
+
+//响应桌主开始游戏
+message StartGameRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//玩家请求操作
+message DoactionReq {
+    // 通用
+    optional string roomsvr_id = 1; //房间服务器id
+    optional int32 roomsvr_table_address = 2; //桌子的服务器地址
+
+
+    optional Version version = 3;
+    optional int32 id = 4;
+    repeated int32 cards = 5; //牌
+    repeated int32 laizi_cards_key = 6; //癞子替换的牌
+
+    // 21点
+    optional int32 action_type = 7;
+    optional int32 action_subtype = 8; //子类型 | 下注时:下注的筹码数 | 买保险时: 1.买保险 2.不买保险 | 投降时: 1. 投降 2.不投降
+    optional int32 obj_seat = 11; //目标玩家座位号
+    optional int32 hand = 10; //手牌id,可能有两手牌
+    optional double call_times = 9;
+
+
+}
+
+//通知机器人操作
+message Doaction2RobotNtc {
+    optional int32 action_type = 1; //操作类型 1下注
+    optional int32 value = 2; //值
+}
+
+//响应玩家请求操作
+message DoactionRes {
+    // 通用
+    optional int32 errcode = 2; //错误原因 0表示成功
+    optional string errcodedes = 3; //错误描述
+
+    //21点
+    optional int32 action_type = 4;
+    optional int32 action_subtype = 1; //子类型
+    optional int32 hand = 6; //手牌id(21点),可能有两手牌
+
+}
+
+//通知玩家操作
+message DoactionNtc {
+    optional int32 can_use_bomb = 1; //是否限制使用炸弹(四人斗地主使用) 默认这个值无 0:可以使用  1:限制
+    optional int32 must_chu_heart3 = 2; //是否必须出红心3 0不用 1必须
+    optional int32 rounds = 3; //当前的总轮数(诈金花)
+    optional int32 roomsvr_seat_index = 4;
+
+    // -- 21点使用
+    optional int32 rid = 5;
+    optional int32 action_to_time = 6; //玩家操作到期时间,秒数
+    optional int32 action_type = 7; //玩家操作类型 1:下注  2:要牌  4:停牌 8:双倍下注 16:分牌 32:买保险 64: 投降 128: 准备开始 256:洗牌
+    optional int32 action_subtype = 8; //子类型
+    optional int32 obj_seat = 9; //目标玩家座位号
+    optional int32 hand = 10; //手牌id(21点),可能有两手牌
+
+
+}
+
+//通知玩家操作结果
+message DoactionResultNtc {
+    optional int32 card_type = 1; //参考 enum.lua ECardType字段
+    optional int32 rang_pai_num = 2; //让牌数量(2人斗地主)
+    optional int32 fan_bei_num = 3; //翻倍数
+    optional int32 is_server_op = 4; //是不是服务器动作 1是
+    repeated int32 laizi_cards_key = 5; //癞子替换的牌
+    optional int32 roomsvr_seat_index = 6;
+    optional int32 all_score = 7; //当前牌面的总分数(诈金花)
+    optional int32 player_win_score = 8; //玩家在这个位置所赢取的分数
+
+    // -- 21点使用
+    optional int32 rid = 9;
+    optional int32 action_type = 10;
+    optional int32 action_subtype = 11; //子类型
+    optional int32 obj_seat = 12; //操作目标座位号
+    optional int32 hand = 13; //手牌id(21点),可能有两手牌
+    repeated int32 cards = 14; //牌 -- 补牌、双倍下注、结算时使用
+    repeated int32 cards_1 = 15; //手牌1
+    repeated int32 cards_2 = 16; //手牌2 , 只有分牌的时候使用
+    optional double betScores = 17; // 下注额
+    optional double betScores_1 = 18; // 下注额1
+    optional double betScores_2 = 19; // 下注额2
+    optional double call_times = 20; // 玩家叫分
+    optional string is_blackjack_banker = 21; //庄家是否是blackjack(1:是,0:不是)
+    optional string is_blackjack_player = 22; //玩家是否是blackjack(1:是,0:不是)
+    repeated Settlement21 settlement = 23; //结算
+    optional string times = 24; // 赔率 blackjack: 1.5 , other: 1 , 平: 0
+    optional string is_over_load = 25; //是否爆牌 (1:是,0:不是)
+    optional double coins = 26; //金币
+    optional bool is_last_refill = 27; //是否最后一次补牌
+    optional bool is_reach_yellow_card = 28; //是否遇到黄卡
+    optional int32 remain_cards_count = 29; //剩余牌的张数
+    optional int32 yellow_card_coordinate = 30; //黄卡位置
+    optional int32 action_to_time = 31; //玩家操作到期时间,秒数
+
+
+
+}
+//21点结算字段
+message Settlement21{
+    optional int32 rid = 1;
+    optional int32 obj_seat = 2;
+    optional string victory = 3; // 胜利状态
+    optional string victory_1 = 4; // 手牌1胜利状态
+    optional string victory_2 = 5; // 手牌2胜利状态
+    optional double win_score = 6; // 赢得的钱
+    optional double coins = 7; // 剩余金币
+
+}
+
+
+//玩家请求准备
+message GameReadyReq {
+    optional Version version = 1;
+    optional int32 id = 2;
+    optional string roomsvr_id = 3; //房间服务器id
+    optional int32 roomsvr_table_address = 4; //桌子的服务器地址
+}
+//响应玩家请求准备
+message GameReadyRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//请求玩家战绩信息
+message PlayerGameRecordinfoReq {
+    optional Version version = 1;
+    optional int32 rid = 2;
+    optional int32 id = 3; //最新一条战绩的自增id
+    optional int32 limit = 4; // 要查询的战绩条数
+}
+
+//每个玩家在朋友桌存在期间的记录
+message playerRecordinfo {
+    optional int32 rid = 1;
+    optional int32 currencyid = 2; //货币id，金币为1
+    optional int32 balancenum = 3; //输赢的数量，+为赢，-为输
+    optional string rolename = 4; // 玩家名字
+}
+message PlayerGameRecordinfo {
+    optional int32 id = 1; //自增id
+    optional int32 table_id = 2; //桌子id
+    optional int32 table_create_time = 3; //桌子创建时间
+    optional int32 tablecreater_rid = 4; //桌子创建者的rid
+    optional int32 entercosts = 5; // 报名费
+    repeated playerRecordinfo recordinfos = 6;
+}
+
+//响应玩家战绩信息
+message PlayerGameRecordinfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated PlayerGameRecordinfo records = 3; //
+}
+
+//请求玩家的邮件信息
+message GetMailsReq {
+    optional int32 create_time = 1;
+}
+
+//服务器主动推送玩家的邮件信息
+message PlayerMailNtc {
+    optional int32 type = 1; // type:1 上线的时候同步以前的邮件  type:2 上线以后 新获得的邮件 3 全服邮件
+    repeated MailItem mailitems = 2; // 上线以后新获得的邮件
+}
+
+message MailItem {
+    optional string mail_key = 1;
+    optional int32 reason = 2; //邮件类型
+    optional int32 rid = 3; //
+    optional int32 create_time = 4;
+    optional string content = 5;
+    optional int32 isattach = 6; //1 有附件且未领取 0 无附件或已领取
+    optional int32 is_read = 7; //是否已经读取
+}
+
+//俱乐部成员界面
+//获取成员列表
+message PlayerMailListReq {
+    optional int32 index = 1; //请求数据开始编号
+    optional int32 page_size = 2; //分页大小(不填写默认为6) 填写了最多不超过15
+    optional int32 req_type = 3; // 1 请求全服邮件
+}
+
+message PlayerMailListRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 index = 3; //请求数据开始编号
+    optional int32 size = 4; //本次发送的数据长度
+    optional int32 total = 5; //数据总共多少条
+    repeated MailItem mailitems = 6; // 上线以后新获得的邮件
+}
+
+// 玩家设置某封邮件为已读
+message PlayerMailAlreadyReadReq {
+    optional string mail_key = 1;
+}
+
+message PlayerMailAlreadyReadRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+}
+
+//响应玩家的邮件信息
+message GetMailsRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    repeated MailItem mailitems = 3; // 玩家邮件列表
+}
+
+//玩家请求领取邮件附件
+message GetmailItemsReq {
+    optional Version version = 1;
+    optional string mail_key = 2;
+}
+
+//响应玩家请求领取邮件附件
+message GetmailItemsRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional string mail_key = 3; //
+    optional string resultdes = 4; // 得到物品的json串
+}
+
+// 玩家请求删除邮件
+message DeleteMailReq {
+    optional Version version = 1;
+    optional string mail_key = 2;
+}
+
+// 响应玩家请求删除邮件
+message DeleteMailRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional string mail_key = 3; //
+}
+
+//任务奖励
+message TaskReward {
+    optional int32 id = 1; //奖励物品ID 1金币
+    optional int32 num = 2; //数量
+}
+
+//任务列表
+message TaskItem {
+    optional int32 task_id = 1; //任务ID
+    optional string desc = 2; //任务描述
+    optional int32 condition = 3; //需要完成数量
+    optional int32 progress = 4; //完成进度
+    optional int32 status = 5; //是否已经领取奖励了 0没有完成 1已经完成未领奖 2已领奖
+    repeated TaskReward rewards = 6; //任务奖励信息
+    optional int32 jump_type = 7; //1普通场 2比赛场
+    optional string icon = 8; // 客户端显示icon
+}
+
+//查询任务
+message QueryTaskReq {
+    optional Version version = 1;
+}
+
+//响应查询任务
+message QueryTaskRes {
+    optional int32 errcode = 1;
+    optional string errcodedes = 2;
+    repeated TaskItem dailytasks = 3; //每日任务
+    repeated TaskItem systemtasks = 4; //系统任务
+}
+
+//进度
+message DoTaskNtc {
+    optional TaskItem daily_task_info = 1;
+}
+
+//领取任务奖励
+message GetTaskRewardReq {
+    optional int32 task_id = 1; //任务ID
+    optional int32 task_type = 2; //任务类型 1每日任务 2系统任务
+}
+
+//领取任务奖励响应
+message GetTaskRewardRes {
+    optional int32 errcode = 1;
+    optional string errcodedes = 2;
+    optional int32 task_id = 3; //任务ID
+    optional int32 task_type = 4; //任务类型 1每日任务 2系统任务
+    optional int32 status = 5; //0没有完成 1已经完成未领奖 2已领奖
+    repeated AwardItem award_list = 6; //物品列表
+}
+
+// 玩家请求发送聊天信息
+message SendMessageReq {
+    optional Version version = 1;
+    optional string messages = 2; //json 串
+    optional int32 chat_type = 3; //聊天类型(备用)
+    optional int32 chat_to_seat_index = 4; //聊天
+}
+
+// 玩家发送聊天信息回应
+message SendMessageRes {
+    optional int32 errcode = 1;
+    optional string errcodedes = 2;
+}
+
+message ConfBase {
+    optional int32 changetime = 1;
+    optional string confname = 2;
+    optional string confcontent = 3; //json
+}
+//客户端请求下载配置文件
+message DownloadCfgReq {
+    optional Version version = 1;
+    repeated ConfBase resconfinfos = 2;
+}
+//响应客户端请求下载配置文件
+message DownloadCfgRes {
+    optional int32 errcode = 1;
+    optional string errcodedes = 2;
+    repeated ConfBase reqconfinfos = 3;
+}
+
+//客户端请求解散房间
+message DisbandRoomReq {
+    optional int32 id = 1;
+    optional string roomsvr_id = 2; //房间服务器id
+    optional int32 roomsvr_table_address = 3; //桌子的服务器地址
+    optional int32 roomsvr_seat_index = 4; //
+}
+//客户端请求解散房间
+message DisbandRoomRes {
+    optional int32 errcode = 1;
+    optional string errcodedes = 2;
+}
+
+//客户端回复解散房间
+message ResponseDisbandRoomReq {
+    optional int32 id = 1;
+    optional string roomsvr_id = 2; //房间服务器id
+    optional int32 roomsvr_table_address = 3; //桌子的服务器地址
+    optional int32 roomsvr_seat_index = 4; //
+    optional int32 bdisband = 5; //是否同意解散  1 同意 2 拒绝
+}
+
+//客户端回复解散房间
+message ResponseDisbandRoomRes {
+    optional int32 errcode = 1;
+    optional string errcodedes = 2;
+}
+
+//appstore获取请求列表
+message IosGoodItems {
+    optional string goods_id = 1; //商品id
+    optional int32 count = 2; //张数
+    optional int32 price = 3; //人民币价格
+    optional string title = 4; //标题
+    optional string simple_description = 5; //简单描述
+    optional string description = 6; //描述
+    optional string iconPath = 7; //图标地址
+}
+
+message BuyCardModelReq {
+    optional Version version = 1;
+    optional int32 type = 2; //type == 1 则为 模拟充值 其他都为 ios 充值
+}
+
+message BuyCardModelRes {
+    optional int32 errcode = 1;
+    optional string errcodedes = 2;
+    repeated IosGoodItems goods_item = 3;
+}
+
+//创建俱乐部
+message CreateClubReq {
+    optional int32 rid = 1; //role id
+    optional string club_name = 2; //俱乐部名字
+    optional string club_city = 3; //俱乐部地址
+}
+
+message CreateClubRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 club_id = 3; //俱乐部id
+}
+
+//申请加入俱乐部
+message JoinClubReq {
+    optional int32 club_id = 1;
+}
+
+//新加入俱乐部的申请, 推送给创建者
+message NewJoinClubApplyNtc {
+    optional int32 type = 1; //type 1 : 上线通知创建者 现在有几个人申请  type 2: 有新的申请 来了
+    optional int32 num = 2; // 申请的数量
+}
+
+
+message JoinClubRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//俱乐部编辑
+message ClubEditReq {
+    optional int32 rid = 1;
+    optional string edit_club_notice = 2; //公告板
+    optional string edit_club_city = 3; //地区
+    optional string edit_club_name = 4; //俱乐部名字
+}
+
+message ClubEditRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//clubeditntc
+//通知客户端 创建者编辑俱乐部的结果(只有在线才能收到)
+message ClubEditNotice {
+    optional int32 notice_type = 1; // 通知类型: 1:被删除出俱乐部
+}
+
+//俱乐部主界面
+//获取俱乐部相关消息
+message ClubInfoReq {
+    optional int32 rid = 1;
+}
+
+message ClubInfo {
+    optional string club_notice = 1; //公告板
+    optional int32 club_create_time = 2; //创建时间
+    optional string club_owner_name = 3; //所有者名字
+    optional int32 club_id = 4;
+    optional int32 club_room_card = 5;
+    optional int32 club_level = 6;
+    optional int32 online_member = 7; //在线人数
+    optional string club_name = 8; //俱乐部名称
+    optional string club_city = 9; //俱乐部地区
+    optional int32 club_member_counts = 10; //当前成员数量
+    optional int32 club_max_member_limit = 11; //最大成员限制
+    optional int32 club_room_card_endtime = 12; //白名单成员可以使用公用房卡剩余时间(秒)
+    optional bool is_check_long_time = 13; //是否为白名单长时间可以使用房卡
+    optional int32 club_owner_rid = 14; //创建者id
+    optional int32 day_average_room_times_of_7day = 15; //7日每天平均局数
+    optional int32 my_club_room_card_quota = 16; // 自己所在俱乐部的配额数据
+    optional int32 exit_end_time = 17; //退出终止时间(>0用于客户端显示倒计时 =0不做显示)
+}
+
+message ClubInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional ClubInfo club_info = 3; //俱乐部相关
+}
+
+//客户端获取配置
+message ConfigReq {
+    optional int32 theme = 1; // 选择主题
+    optional int32 type = 2; //(1:俱乐部等级相关配置 2:俱乐部星级配置 3:城市索引)
+}
+
+message ConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional string data = 3;
+    optional int32 type = 4;
+}
+
+//俱乐部等级界面
+//获取俱乐部等级
+message ClubLevelInfoReq {
+    optional int32 rid = 1;
+}
+
+message ClubLevelInfo {
+    optional int32 club_level = 1; //俱乐部等级
+    optional int32 average_war_record_7 = 2; //日均局数
+}
+
+message ClubLevelInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional ClubLevelInfo club_level_info = 3; //
+}
+
+//俱乐部成员界面
+//获取成员列表
+message ClubMembersListReq {
+    optional int32 rid = 1;
+    optional string key = 2; //按照关键字进行模糊查询,不填或者为空则不处理该值
+    optional int32 index = 3; //请求数据开始编号
+    optional int32 page_size = 4; //分页大小(不填写默认为6) 填写了最多不超过15
+}
+
+message MemberInfo {
+    optional int32 rid = 1;
+    optional string photo = 2;
+    optional string name = 3;
+    optional int32 status = 4; //(CLUB_MEMBER_TABLE_STATE : 1.在线 2.下线  3.等待玩家坐下 4.等待所有玩家准备 5.一局游戏开始)
+    optional int32 off_time = 5; //离线时间
+    optional int32 level = 6; //(1:拥有者 2:白名单 3:普通成员)
+    optional int32 star_level = 7; //玩家对应俱乐部商城星级
+    optional int32 remain_room_card = 8; //剩余配额房卡
+    optional int32 current_table_player_num = 9; //当前牌桌人数,在 等待开局 该值有效
+    optional int32 create_table_id = 10; //当前牌桌编号,在 等待开局 该值有效
+    optional int32 exit_club_remain_time = 11; //退出俱乐部剩余时间(如果是0 就没有退出)
+    optional int32 max_player_num = 12; //当前牌桌最大人数
+}
+
+message ClubMembersListRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated MemberInfo member_info = 3;
+    optional int32 application_num = 4; //申请加入club信息条数
+
+    optional int32 index = 5; //请求数据开始编号
+    optional int32 size = 6; //本次发送的数据长度
+    optional int32 total = 7; //数据总共多少条
+}
+
+//等待开局时候成员可以点击进入对应房间
+message MemberJoinRoomReq {
+    optional int32 rid = 1;
+    optional int32 to_rid = 2; //目标用户id
+}
+
+message MemberJoinRoomRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 room_id = 3; //房间id
+    optional string room_address = 4; //房间地址
+}
+
+//管理俱乐部界面
+//获取申请列表
+message ApplicationMembersReq {
+    optional int32 rid = 1;
+    optional string key = 2; //按照关键字进行模糊查询,不填或者为空则不处理该值
+}
+
+message ApplicationMembers {
+    optional int32 rid = 1;
+    optional string photo = 2;
+    optional string name = 3;
+    optional int32 credit = 4; //信用值
+}
+
+message ApplicationMembersRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated ApplicationMembers application_members = 3; //申请列表
+}
+
+//会长处理 加入俱乐部申请消息
+message HandleClubMemberApplicationReq {
+    optional int32 is_allow_join_club = 1; //是否允许(1.允许 2. 拒绝)
+    optional int32 choose_rid = 2; //选择的角色
+}
+
+message HandleClubMemberApplicationRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 is_allow_join_club = 3; //是否允许(1.允许 2. 拒绝)
+    optional int32 choose_rid = 4; //选择的角色
+}
+
+//通知客户端 自己的申请结果
+message ClubApplicationResultNotice {
+    optional int32 club_id = 1; //是否允许(1.允许 2. 拒绝)
+    optional int32 is_allow_join_club = 2; //是否允许(1.允许 2. 拒绝)
+}
+
+//管理俱乐部成员
+//!!!!!! 在文件里 clubmanagemember.lua
+message ManageClubMemberReq {
+    optional int32 add_white_list_id = 1; //增加白名单rid
+    optional int32 remove_white_list_id = 2; //移出白名单rid
+    optional int32 delete_rid = 3; //删除成员
+}
+
+message ManageClubMemberRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 delete_rid = 3; //删除成员
+}
+
+//历史记录 界面
+//历史牌局
+message PaiHistoryInfoReq {
+    optional int32 rid = 1;
+}
+
+message PaiHistoryInfo {
+    optional int32 time = 1;
+    optional string mj_type = 2; //麻将类型(河南麻将)
+    optional int32 room_owner = 3; //房主
+    optional int32 current_ju_num = 4; //现在进行的局数
+    optional int32 total_ju_num = 5; //总共进行的局数
+}
+
+message PaiHistoryInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated PaiHistoryInfo pai_info = 3;
+}
+
+//历史战绩查询
+message WarRewardHistoryInfoReq {
+    optional int32 rid = 1;
+}
+
+message WarRewardHistoryInfo {
+    optional string photo = 1;
+    optional string name = 2;
+    optional int32 score = 3;
+}
+
+message WarRewardHistoryInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated WarRewardHistoryInfo war_reward_info = 3;
+}
+
+
+message ClubTableRecordReq {
+    optional int32 type = 1; //1. 俱乐部历史记录 2.代开记录
+    optional int32 index = 2; //请求数据开始编号
+    optional int32 page_size = 3; //分页大小(不填写默认为6) 填写了最多不超过15
+}
+
+message TableRecordPlayerInfo {
+    optional string photo = 1;
+    optional string name = 2;
+    optional int32 id = 3;
+}
+
+//每局的分数记录
+message TableRecordSigleRoundScoreInfo {
+    repeated int32 score = 1; // 数组,记录每个玩家的数据(下标即为座位号!)
+}
+
+//单个桌子记录
+message SingleTableRecord {
+    optional int32 create_table_id = 1;
+    optional int32 play_round_num = 2; //牌局玩过的局数
+    optional int32 total_round_num = 3; //牌局总局数
+    optional string table_type_name = 4; //牌局类型名称
+    optional string creator_name = 5; //房主名称
+    optional string consume_room_card = 6; //房卡消耗记录
+    optional int32 table_start_time = 7; //牌桌开始时间
+    repeated TableRecordPlayerInfo table_player_info = 8; //牌桌4个玩家信息
+    repeated TableRecordSigleRoundScoreInfo table_score_info = 9; //牌桌中所有完成的单局的分数记录
+    optional bool is_game_end = 10; //  true 已经结束 false 还没有结束
+    optional int32 consume_of_increase_round = 11; // 续局消耗数量
+    optional int32 can_increase_round_num = 12; // 续局能够增加的局数数量
+    optional int32 create_user_rid = 13; // 房主rid
+    optional string table_uid = 14; // 房间唯一编号
+    optional bool is_have_application = 15; //是否有申请(true:有申请 与room_ids对应) -- 对于可管理(未开始)房间
+}
+
+//俱乐部七日数据 数据量大 -> 分页显示
+message ClubTableRecordRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 req_type = 3; //返回请求的类型
+    optional int32 start = 4; //数据开始编号
+    optional int32 size = 5; //本次发送的数据长度
+    optional int32 total = 6; //数据总共多少条
+    repeated SingleTableRecord records = 7; //从start 开始的 数据
+}
+
+//俱乐部公共房卡池界面
+//获取俱乐部公用卡池相关消息
+
+//给玩家设置星级
+message UseRoomCardSetReq {
+    optional int32 operation_rid = 1; //给对应rid划分房卡
+    optional int32 star_level = 2; //对应星级
+}
+
+message UseRoomCardSetRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 operation_rid = 3; //给对应rid划分房卡
+    optional int32 star_level = 4; //对应星级
+}
+
+//玩家根据星级领取俱乐部商城房卡
+message GetRoomCardByStarReq {
+    optional int32 rid = 1;
+    optional int32 room_card = 2; //房卡数量
+}
+
+message GetRoomCardByStarRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 club_room_card = 3; //商城当前房卡
+    optional int32 remain_room_card = 4; //剩余配额量
+}
+
+//配额记录
+message QuotaRoomCardLogReq {
+    optional int32 rid = 1;
+}
+
+message RoomCardLog {
+    optional int32 time = 1; //设置时间
+    optional string name = 2; //对应玩家名字
+    optional int32 conf_room_card = 3; //配额
+    optional int32 consumer_room_card = 4; //每日消耗
+}
+
+message QuotaRoomCardLogRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated RoomCardLog set_room_card_log = 3; //记录
+}
+
+//代开房相关
+//邀请好友开房
+message ClubOpenRoomReq {
+    optional int32 rid = 1;
+    repeated int32 invited_id = 2; //被要请的玩家rid
+    optional int32 check_room_index = 3; //选择对应类型(按位置与)
+}
+
+message ClubOpenRoomRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//对应邀请人回复 yes or no
+message ClueOpenRoomReplyReq {
+    optional int32 rid = 1;
+    optional bool is_agree = 2; //是否同意
+}
+
+message ClueOpenRoomReplyRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional bool is_agree = 3; //是否同意
+}
+
+//牌局审核功能
+//能够被邀请的玩家
+message CanInviteJoinRoomListReq {
+    optional int32 rid = 1;
+}
+
+message CanInviteJoinRoom {
+    optional int32 id = 1;
+    optional string photo = 2; //头像
+    optional string name = 3; //昵称
+    optional int32 credit = 4; //信誉度
+}
+
+message CanInviteJoinRoomListRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated CanInviteJoinRoom member_info = 3; //能够被邀请的成员
+}
+
+//被邀请的玩家
+message InvitedJoinRoomReq {
+    optional int32 rid = 1;
+    repeated int32 invited_ids = 2; //被邀请的玩家列表
+    optional string room_id = 3; //房间id
+}
+
+message InvitedJoinRoomRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//获取club创建者代开房id列表界面
+message DaikaiRoomIdsReq {
+    optional int32 rid = 1;
+}
+
+message DaikaiRoomIdsRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated string room_ids = 3;
+    repeated bool is_have_application = 4; //是否有申请(true:有申请 与room_ids对应)
+}
+
+//代开房主界面显示
+message DaikaiMainInfoReq {
+    optional string create_table_id = 1; //获取代开具体房间的信息
+}
+
+message DaikaiMainInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated CanInviteJoinRoom invite_infos = 3; //被邀请加入房间的玩家
+    repeated CanInviteJoinRoom application_members = 4; //申请列表
+    optional int32 disband_room_time = 5; //剩余时间
+    optional string majiang_name = 6; //麻将名字
+    optional int32 is_review_mode = 7; //房间是否是审核模式, 1 为审核 2 非审核
+
+    repeated string rule_ext_names = 8; //玩法(三人麻将 带混 自摸胡 带风牌 带跑 ..)
+    repeated string max_fan_names = 9; //附加选项
+    optional int32 round_num = 10; //局数
+}
+
+//更新代开房间信息中玩家
+message DaikaiRoomUpdatePlayerNtc {
+    optional string create_table_id = 1; //获取代开具体房间的信息
+    optional CanInviteJoinRoom updated_player = 2; //被邀请加入房间的玩家
+    optional int32 state = 3; // 1: 玩家进入 房间 2 离开房间
+}
+
+//代开将玩家踢出房间
+message DaikaiKickReq {
+    optional int32 rid = 1;
+    optional string room_id = 2;
+    optional int32 kick_rid = 3; //要踢出的玩家rid
+}
+
+message DaikaiKickRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+////////////////////notice/////////////////////
+//通知在其他设备上登陆
+message RepeatNtc {
+    optional int32 rid = 1;
+}
+//通知桌子有玩家坐下
+message SitdownTableNtc {
+    optional int32 rid = 1;
+    optional SeatInfo seatinfo = 2; //座位信息
+    optional TablePlayerInfo tableplayerinfo = 3;
+    optional GameInfo gameinfo = 4;
+}
+
+//通知桌子有玩家站起
+message StandupTableNtc {
+    optional int32 rid = 1;
+    optional int32 roomsvr_seat_index = 2;
+    optional int32 state = 3;
+    optional int32 reason = 4;
+}
+
+message TingStruct {
+    optional int32 card = 1; //牌
+    repeated TingTileInfo canhutilelist = 2;
+}
+
+message TingTileInfo {
+    optional int32 card = 1; //牌
+    optional int32 multiple = 2; //翻数
+}
+
+//倒牌信息
+message MingPaiInfo {
+    repeated int32 cards = 1; //牌表
+}
+
+
+message PDKBombInfo {
+    optional int32 seat_index = 1; //位置
+    optional int32 bomb_score = 2; //玩家炸弹输赢分数
+}
+
+//跑得快 广播当轮结束玩家使用炸弹 产生的分数 进行广播
+message PDKBombNtc {
+    repeated PDKBombInfo player_bomb_list = 1;
+}
+
+//通知玩家开始游戏
+message GameStartNtc {
+    optional GameInfo gameinfo = 1;
+}
+
+//诈金花比牌结果公布
+message CompareCardsNtc {
+    optional int32 winner = 1; //比牌操作胜利者的座位号
+    optional int32 loser = 2; //比牌失败者的座位号
+    optional bool is_draw = 3; //是否为平局
+}
+
+//通知发牌
+message DealCardsNtc {
+    optional int32 rid = 1;
+    optional int32 roomsvr_seat_index = 2;
+    repeated int32 cards = 3; //牌
+}
+
+// 21点通知发牌
+message card_21 {
+    optional int32 obj_seat = 1;
+    optional int32 rid = 2;
+    repeated int32 cards = 3; //具体发牌
+    optional bool is_reach_yellow_card = 4; //是否遇到黄卡
+    optional int32 remain_cards_count = 5; //剩余牌的张数
+}
+
+message DealCardsNtc_21 {
+    repeated card_21 seat_cards = 1; //牌
+}
+
+//红黑大战 龙虎 通知客户端双方的牌
+message AllCardsNtc {
+    repeated int32 red = 1; //红方的牌
+    repeated int32 black = 2; //黑方的牌
+}
+
+//通知玩家准备倒计时
+message DoReadyNtc {
+    optional int32 rid = 1;
+    optional int32 roomsvr_seat_index = 2;
+    optional int32 ready_to_time = 3; //玩家准备到期时间
+}
+
+//一个通用的房间内广播消息
+message GameNtc {
+    optional int32 itype = 1; //消息类型,各玩法可以自己约定
+    optional int32 time = 2; //时间
+}
+
+//农民请求加倍
+message DoDoubleScoreReq {
+    optional int32 rid = 1;
+}
+
+message DoDoubleScoreRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//玩家加倍后广播
+message DoubleScoreNtc {
+    optional int32 rid = 1; //玩家选择了加倍
+    optional int32 status = 2; //0不加倍 1加倍
+}
+
+//红黑大战的玩家信息
+message HHPlayerInfo {
+    optional int32 rid = 1; //rid
+    optional string rolename = 2; //玩家名
+    optional string logo = 3; //logo
+    optional int32 lucky = 4; //是否为幸运星的标志位
+    optional double win_num_20 = 5; //近20局的胜场
+    optional double total_score_20 = 6; //近20局的总下注
+    optional double coins = 7; //总持有金币数 在获取玩家数据列表时候使用
+    optional int32 bigwinner = 8; //是否为大赢家的标志位
+    optional double win_point = 9; //当局赢分
+    optional int32 vip_level = 10; //玩家vip等级
+}
+
+//通知玩家进行搁跑选择并且返回配置 (数组值 为搁跑的 值)
+message DoGePaoNtc {
+    repeated int32 gepao_config = 1;
+    optional int32 action_timeout = 2; //玩家操作限时
+}
+
+//客户端通知服务器选择搁跑配置, gepaonum 就是要选择的倍数!
+// {0,1,2,3}  ==> 不搁跑 x1 x2 x3
+message SelGePaoReq {
+    optional int32 gepaonum = 1;
+}
+
+message SelGePaoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 gepaonum = 3; // 自己搁跑选择的值
+}
+
+//在4个玩家都选完搁跑以后 通知所有客户端大家选择的搁跑值
+message SelGePaoNtc {
+    repeated int32 gepaonum = 1;
+}
+
+//服务端推送桌面上的全部玩家的数据
+message HHTablePlayerNtc {
+    optional int32 isend = 1; //区别是否为结算消息的标志位
+    repeated HHPlayerInfo list = 2; //玩家数据列表
+    optional HHRoadNode hh_road = 3; //写路
+    optional HHPlayerInfo player_info = 4; //玩家自己的数据
+}
+
+//玩家准备好后 的状态 推送给其他玩家
+message GameReadyResultNtc {
+    optional int32 rid = 1;
+    optional int32 roomsvr_seat_index = 2;
+    optional int32 isready = 3;
+    //optional SeatInfo seatinfo = 4; //座位信息
+}
+
+//座位上每个玩家的结算信息
+message PlayerInfoInGameEnd {
+    optional int32 rid = 1; //玩家rid
+    optional int32 finalscore = 2; //总分数
+    optional int32 iswin = 3; //是否赢了
+    optional int32 winnum = 4; //胜利局数
+    optional int32 seatindex = 5; //桌位号
+    optional string rolename = 6; //玩家名
+    optional string logo = 7; //logo
+    repeated int32 rivals = 8; //玩家比过牌的座位号列表
+}
+
+//胡牌具体消息内容
+message HuInfo {
+    optional int32 rid = 1; //消息內容的玩家rid
+    optional int32 seatindex = 2; //消息內容的玩家的座位号
+    optional int32 hu_type = 3; //(1:炸弹)
+    repeated int32 cards = 4; //炸弹的牌
+}
+
+//给玩家发底牌
+message DealCardsEnd {
+    optional int32 seatindex = 1; // 座位号
+    repeated int32 cards = 2; // 玩家剩余的牌
+    optional double winmoney = 3; // 赢或输的金币数量
+    repeated HuInfo hu_info = 4; //胡牌详情
+    optional double total_money = 5; //资产 在普通场为金币数量
+    optional int32 win_contest_score = 6; // 赢或输的比赛分数数量
+    optional int32 total_contest_score = 7; // 比赛总分数
+    optional int32 rank = 8; //比赛排名
+    optional int32 total_player = 9; //总的人数
+    optional int32 be_kick = 10; //是否被淘汰 0没有 1淘汰
+    optional int32 master_score = 11; // 大师分
+    optional int32 times = 12; //单局的倍数
+    optional double base_coin = 13; //底分
+    optional int32 flg = 14; //1被关 2包赔 3反关 4.单关 5.双关 0默认值
+    optional bool is_show_cards = 15; //是否展示牌（咋金花使用）
+}
+//倍数详细信息
+message TimesInfo {
+    optional int32 id = 1; //1初始 2叫抢 3底牌 4炸弹 5明牌 6春天 7特殊牌型
+    optional int32 times = 2; //倍数信息，默认1倍
+}
+
+//游戏结束,推送游戏结果给玩家
+message GameEndResultNtc {
+    repeated DealCardsEnd dealcard = 1; //一小局战况
+    optional double basecoins = 2; // 基础金币数
+    optional int32 times = 3; // 总的倍数
+    repeated PlayerInfoInGameEnd countdata = 4; //最后结算总数据统计
+    optional int32 ischuntian = 5; //是否是春天
+    optional int32 mjrounds = 6; //当前局数
+    optional string table_rounds_uid = 7; //每一局 唯一标识
+    optional int32 total_time = 8; //总耗时(1:第一局到当前局所耗时秒)
+    repeated TimesInfo times_info_list = 9; //倍数信息信息
+    optional int32 total_rounds = 10; //总的需要打的局数
+    optional bool is_friend_force_disbandom = 11; //朋友约局强制解散(比如金币结算，有人金币为0了)
+    optional int32 remain_score = 12; //牌桌上剩余分数
+    optional bool is_game_end = 13; //  true 已经结束 false 还没有结束
+
+    // 21点
+
+    //21点
+    repeated Settlement21 settlement = 14;
+    repeated int32 banker_cards = 15;
+}
+
+message CardsPuts {
+    optional int32 rid = 1;
+    repeated int32 putcards = 2;
+    repeated int32 laizi_cards_key = 3; //癞子替换的牌
+}
+
+//重新进入房间 推送
+message ReenterRoomNtc {
+    optional int32 index = 1; //重连玩家座位编号
+}
+
+//玩牌任务相关
+message CardTask {
+    optional int32 beinum = 1; //倍数
+    optional string desc = 2; //描述
+}
+
+//
+message ReenterTableNtc {
+    repeated int32 handcards = 1; //手牌
+    repeated int32 dealcards = 2; //
+    repeated CardsPuts cardsput = 3; //断线重连时,各个玩家的出牌情况
+    optional int32 action_type = 4;
+    optional int32 action_to_time = 5;
+    optional int32 action_seat_index = 6;
+    optional int32 must_chu_heart3 = 7; //是否必须出红心3 0不用 1必须
+    optional CardTask random_task = 8; //最后一手随机任务
+    repeated CardTask dipai_tasks = 9; //底牌任务
+
+    optional bool is_use_kandipai = 10; //能否看底牌
+    optional bool is_use_jipaiqi = 11; //是否使用了记牌器
+    repeated int32 dipai_cards = 12; //底牌
+    repeated int32 handle_out_card = 13; //已经打过的牌
+}
+
+//牌桌内广播玩家发送的消息
+// # chat_type 0 文字消息 =>  message 数字
+// # chat_type 1 表情  => message 图片名称
+// # chat_type 2 语音消息  => message url
+// # chat_type 3 用户输入的文字聊天消息  => message url
+// chat_to_seat_index = 5 //聊天
+message PlayerTableMessageNtc {
+    optional int32 rid = 1;
+    optional int32 seat_index = 2;
+    optional string messages = 3; //json 串
+    optional int32 chat_type = 4; //聊天类型(备用)
+    optional int32 chat_to_seat_index = 5; //聊天消息到达地点
+}
+
+//通知发货
+message DeliverGoodsNtc {
+    optional string order_id = 1; //订单号
+    optional string option_data = 2; //附加数据
+    repeated AwardItem awards = 3; //奖励物品
+}
+//玩家货币,胜局数改变时通知客户端
+message PlayerBaseInfoNtc {
+    optional PlayerBaseinfo baseinfo = 1; //
+}
+
+message PlayerLevelTableNtc {
+    optional int32 rid = 1;
+}
+
+message PlayerDisconnectNtc {
+    optional int32 index = 1; //掉线玩家座位号
+}
+
+//客户端请求解散房间通知
+message DisbandRoomNtc {
+    optional int32 id = 1;
+    optional string roomsvr_id = 2; //房间服务器id
+    optional int32 roomsvr_table_address = 3; //桌子的服务器地址
+    optional int32 roomsvr_seat_index = 4; //
+    optional string rolename = 5; //请求解散房间的玩家
+}
+
+//解散房间结果通知
+message DisbandRoomResultNtc {
+    optional int32 id = 1;
+    optional string roomsvr_id = 2; //房间服务器id
+    optional int32 roomsvr_table_address = 3; //桌子的服务器地址
+    optional int32 roomsvr_seat_index = 4; //
+    optional int32 bdisband = 5; //是否同意解散  1 同意 2 拒绝
+    optional string rolename = 6; //同意或者拒绝解散房间的玩家
+}
+
+//推送金钱变化
+message GoodsNtc {
+    optional int32 rid = 1;
+    optional double coins = 2; //金币
+    optional int32 diamonds = 3; // 钻石
+    optional int32 base_room_card = 4; //普通房卡
+    optional int32 bind_room_card = 5; //绑定房卡
+    optional int32 master_score = 6; // 大师分
+    optional int32 king_wins_card = 7; //胜王卡
+    repeated BagInfo bag_info = 8; //背包道具
+    optional int32 totalgamenum = 9; // 总局数
+    optional int32 winnum = 10; //胜场
+    optional double bank_coin = 11; //银行金币变化
+    optional double e_wallet = 12;//电子钱包
+}
+
+//服务器推送消息 ==> 现在这个实质上已经是解散房间的消息了
+message SeverNtc {
+    optional int32 msg_type = 1; // type = 2 解散房间
+    optional string disband_reason = 2; //解散房间原因
+}
+
+//玩家推广员数据改变,服务器主动通知客户端修改状态
+message PlayerBindPrompterNtc {
+    optional int32 bind_prompter = 1; //是否绑定了推广员关系 1 即为绑定 => 以后可以扩展为 绑定id
+}
+
+
+message BroadCastMsgInfo {
+    optional string msg = 1; //广播消息
+    optional int32 count = 2; //广播次数 这个字段易游棋牌改为循环播放暂且保留不使用
+    optional int32 distance_time = 3; //间隔时间
+}
+//广播消息
+message BroadCastMsgNtc {
+    repeated BroadCastMsgInfo broadcast_list = 1; //广播列表
+}
+
+//推送申请加入俱乐部回复
+message JonClubInfoNtc {
+    optional int32 status = 1; //申请回复(同意 拒绝)
+}
+
+//推送服务器变化
+message ClubChangeNtc {
+    optional int32 command_id = 1; //命令id(修改公告板 提升成员等级 降低成员等级 移出成员)
+    optional string extra_msg = 2;
+    optional int32 extra_data = 3;
+}
+
+//推送代开房
+message ClubOpenRoomNtc {
+    optional int32 invite_id = 1; //邀请id
+    optional string invite_name = 2; //xx代开房
+    optional int32 check_room_index = 3; //对应规则
+}
+
+//推送被邀请加入牌局
+message InviteJoinRoomNtc {
+    optional string room_number = 1; //房间号
+    optional string room_owner_name = 2; //房间所以者名字
+    optional int32 invite_id = 3; //邀请进入房间的玩家id
+}
+
+//房主可以开关审核模式
+message TableReviewModeSetReq {
+    optional int32 is_open = 1; // 1.开启 2.关闭
+    optional string create_table_id = 2; // 1.开启 2.关闭
+}
+
+message TableReviewModeSetRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional string create_table_id = 3; // 哪个房间
+    optional int32 is_open = 4; // 1.开启 2.关闭
+}
+
+//通知等待带开房间审核的玩家 该房间已经关闭了审核
+message TableReviewClosedNtc {
+    optional string table_create_id = 1; //
+}
+
+//通知代开房间房主 新的加入房间申请
+message TableReviewApplyNtc {
+    optional int32 rid = 1;
+    optional string name = 2; //昵称
+    optional string logo = 3; //logo
+    optional string table_create_id = 4; //房间号码
+}
+
+//房主重新进入桌子的时候 一次收到所有的 进入审核桌子申请
+message TableReviewApplyMutiNtc {
+    optional int32 is_review_mode = 1;
+    repeated TableReviewApplyNtc applys = 2;
+}
+
+//处理审核通知
+message HandleTableReviewApplyReq {
+    optional int32 choose_rid = 1;
+    optional bool is_allow = 2;
+    optional string room_id = 3;
+}
+
+message HandleTableReviewApplyRes {
+    // ALREADY_JOIN_OTHER_TABLE = 65, "玩家已经加入了其它房间了!"
+    // MSG_SEND_ERROR_BY_OFFLINE = 66,"该玩家已经离线,发送失败!"
+
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 choose_rid = 3;
+}
+
+//房主审核结果通知其他玩家,其他玩家如果收到 允许 则发送 EnterTableReq 请求
+message TableReviewApplyResultNtc {
+    optional bool is_allow = 1;
+    optional int32 create_table_id = 2;
+    optional string create_user_rolename = 3;
+
+    //EnterTableReq请求需要的参数
+    optional int32 id = 4; //桌子id
+    optional string roomsvr_id = 5; //房间服务器id
+    optional int32 roomsvr_table_address = 6; //桌子的服务器地址
+    optional string errcodedes = 7; //错误描述(is_allow为false时候使用)
+}
+
+//根据星级获取玩家的对应使用房卡数
+message MemberStarLevelNtc {
+    optional int32 star_level = 1; //对应星级
+    optional int32 can_use_room_card = 2; //玩家能够使用的量
+    optional int32 club_room_card = 3; //俱乐部总房卡
+}
+
+//等级变化通知客户端
+message ClubLevelChangeNtc {
+    optional int32 club_level = 1; //俱乐部等级
+    optional int32 club_member_counts = 2; //俱乐部人数上限
+}
+
+//创建者给俱乐部代开房间 增加 局数
+message ClubDaikaiTableIncreaseRoundReq {
+    optional string table_uid = 1; //房间唯一编号
+}
+
+//创建者给俱乐部代开房间 增加 局数
+message ClubDaikaiTableIncreaseRoundRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional string table_uid = 3; //代开房间的 房主id  ,用于在成功的情况下通知客户端刷新纪录
+    optional int32 new_total_round_num = 4; //续局以后 新的轮数
+}
+
+//续局成功通知在牌桌上的玩家
+message TableConfChangeNtc {
+    optional int32 type = 1; //1 : 续局成功 通知 局数增加
+    optional string club_owner_name = 2; //创建者名字
+    optional int32 new_rounds = 3; //新的局数
+}
+
+//代开房创建者将玩家提出房间
+message DaikaiKickNtc {
+    optional string name = 1; //创建者名字 用于显示 xxx将你移出房间
+}
+
+//推送俱乐部房卡变化
+message ClubRoomCardNtc {
+    optional int32 club_room_card = 1; //房卡数量
+}
+
+// 模拟充值使用
+message MockChargeReq {
+    optional string item_id = 1;
+}
+
+message MockChargeRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//客户端主动更新自己的 坐标
+message UploadPlayerPostionReq {
+    optional string latitude = 1; //纬度
+    optional string longitude = 2; //经度
+}
+
+//客户端主动更新自己的 坐标
+message UploadPlayerPostionRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//客户端主动更新自己的坐标以后  主动同步给牌桌的其他人
+message UploadPlayerPostionNtc {
+    optional int32 rid = 1;
+    optional string latitude = 2; //纬度
+    optional string longitude = 3; //经度
+}
+
+//绑定 邀请人
+message BindIntroducerReq {
+    optional int32 bind_rid = 1;
+}
+message BindIntroducerRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//自己邀请的新人 列表
+message InviteNewPlayerInfo {
+    optional int32 rid = 1;
+    optional string name = 2;
+    optional int32 status = 3; // 0 不能 1 可以 2. 已经领取
+    optional int32 invite_time = 4; // 邀请时间
+    optional int32 award_cards = 5; // 奖励的房卡数量
+}
+
+//请求自己邀请的玩家列表
+message InviteNewPlayerListReq {
+
+}
+message InviteNewPlayerListRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated InviteNewPlayerInfo invite_player_list = 3;
+}
+
+
+message InviteActivityStateReq {
+    optional int32 type = 1; //获取自己邀请的人数以及领取的房卡数
+}
+
+message InviteActivityStateRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+
+    // type 1
+    optional int32 total_invite_num = 3; //总共邀请的人数
+    optional int32 already_get_card = 4; //获取领取的房卡数
+}
+
+// 通知玩家进入该模拟房间
+message MockTableInfoNtc {
+    optional string roomsvr_id = 1; //房间服务器id
+    optional int32 roomsvr_table_address = 2; //桌子的服务器地址
+    optional GameInfo gameinfo = 3;
+    repeated int32 gepaonum = 4;
+}
+
+//玩家请求进行下一个模拟操作
+message MockTableNextActionReq {
+    optional string roomsvr_id = 1; //房间服务器id
+    optional int32 roomsvr_table_address = 2; //桌子的服务器地址
+}
+
+
+message MockTableNextActionRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//请求获得自己邀请的某个人的那个奖励
+message GetInviteNewPlayerAwardReq {
+    optional int32 choose_rid = 1;
+}
+
+message GetInviteNewPlayerAwardRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//请求领取分享app 奖励
+message ShareAppAwardReq {
+    optional int32 type = 1; // type 1: 查询时间 type 2: 领取奖励
+}
+
+message ShareAppAwardRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 type = 3; // 1:查询时间，2领取奖励
+    optional int32 remain_time = 4; // 下次可分享的剩余时间，<=0 表示立即可分享
+}
+
+
+message ClientErrorUploadReq {
+    optional string errorDesc = 1; //错误描述
+    optional string deviceinfo = 2; //平台
+}
+
+message ClientErrorUploadRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//回放操作 桌子配置 以及玩家信息
+message PlayBackTableInitInfo {
+    optional TableStateItem table_state_info = 1; //各种玩法
+    repeated MingPaiInfo seat_card = 2; //座位 (包含玩家的初始手牌)
+    repeated TablePlayerInfo seat_player_info = 3; //玩家的信息
+    optional int32 dz_seat_index = 4; //
+    repeated int32 gepao_config = 5; //每一局的搁跑配置
+}
+
+//回放操作 分数结果 信息
+message PlayBackScoreResultInfo { // copy GameEndResultNtc
+                                  repeated DealCardsEnd dealcard = 1; //座位上每个玩家的手牌
+                                  repeated int32 winseatindex = 2; //赢家的座位号,可能是多个玩家
+                                  optional int32 endtype = 3; //结束类型
+                                  optional int32 mjrounds = 4; //麻将当前局数
+                                  optional int32 mjquannum = 5; //麻将当前圈数
+                                  repeated PlayerInfoInGameEnd countdata = 6; //最后结算数据统计
+                                  optional int32 baocardvalue = 7; //宝牌
+
+                                  optional int32 dianpao_index = 8; //点炮玩家座位号(没有则是 0)
+                                  optional int32 hupai_index = 9; //胡牌玩家座位号
+                                  optional int32 hupai_type = 10; //胡牌类型 -> EHuPaiType(只是一种,不需要使用位操作)
+                                  optional string table_rounds_uid = 11; //每一局 唯一标识
+                                  optional int32 ischuntian = 12; //是否是春天
+                                  optional double basecoins = 13; //基础分数
+                                  optional int32 times = 14; //翻倍数
+                                  optional int32 total_time = 15; //总计时间
+}
+
+//回放操作  每次玩家操作的 结果信息
+message PlayBackActionResultInfo { // DoactionResultNtc && DoactionNtc(摸牌操作)
+                                   optional int32 rid = 1;
+                                   optional int32 roomsvr_seat_index = 2;
+                                   optional int32 action_type = 3;
+                                   repeated int32 cards = 4; //牌
+                                   optional int32 call_times = 5; // 玩家叫分
+                                   optional int32 card_type = 6; //参考 enum.lua ECardType字段
+                                   optional int32 rang_pai_num = 7; //让牌数量(2人斗地主)
+                                   optional int32 fan_bei_num = 8; //翻倍数
+                                   repeated int32 laizi_cards_key = 9; //癞子替换的牌
+}
+
+//请求回放操作
+message PlayBackRecordReq {
+    optional string table_rounds_uid = 1; //每一局唯一标识
+}
+
+
+message PlayBackRecordRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional PlayBackTableInitInfo table_info = 3;
+    optional PlayBackScoreResultInfo score_info = 4;
+    repeated PlayBackActionResultInfo action_result_list = 5;
+}
+
+//退出俱乐部申请
+message ExitClubReq {
+    optional int32 rid = 1; //申请玩家的rid
+    optional int32 type = 2; //1退出俱乐部 2取消退出
+}
+
+message ExitClubRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 exit_club_last_time = 3; //退出俱乐部剩余时间
+}
+
+//服务器主动断开玩家网络并且通知玩家原因
+message KickPlayerNtc {
+    optional string desc = 1; //踢人描述
+}
+
+message DizhuNtc {
+    optional int32 rid = 1; //玩家rid
+    optional int32 seatindex = 2; //地主位置
+    repeated int32 cards = 3; //牌
+    optional int32 call_times = 4; //倍数(牛牛)
+    repeated int32 qiangzhuang_seatindex_list = 5; //地主在这个列表中随机
+}
+
+//暂时离开桌子
+//该消息在服务器 只是做转发操作,由客户端在返回桌面或者回到游戏的时候发送
+//另外需要在玩家重连的时候 同步其他玩家的暂离状态
+message TempLeaveReq {
+    optional int32 rid = 1;
+    optional int32 type = 2; // 1 离开 0 返回
+}
+
+//暂时离开桌子
+message TempLeaveRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+
+message TempLeaveNtc {
+    optional int32 rid = 1;
+    optional int32 type = 2; // 1 离开 0 返回
+}
+
+//推送玩家手牌数量和翻倍数
+message PushhandsNumNtc {
+    optional double basecoins = 1;
+    optional int32 times = 2;
+    repeated SeatInfo seats = 3;
+}
+
+//给玩家发底牌
+message DealCardsEndNtc {
+    optional int32 rid = 1; //
+    repeated int32 cards = 2; // 玩家底牌
+    optional int32 times = 3; //总的倍数
+    //optional CardTask random_task = 4; //最后一手随机任务
+    //repeated CardTask dipai_tasks = 5; //底牌任务
+}
+
+message MingPaiCardNtc {
+    optional int32 card = 1; //2斗明牌
+}
+
+message MingPaiNtc { //某人明牌
+                     optional int32 seat_index = 1;
+                     repeated int32 cards = 2;
+}
+
+//没人叫地主推送消息
+message NoDizhuNtc {
+    optional string info = 1; //每人叫地主从新发牌
+}
+
+//客户端挂起不需要收到房间内相关推送消息
+message HangUpReq {
+    optional int32 rid = 1;
+}
+
+message HangUpRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//唤醒请求
+message WakeUpReq {
+    optional Version version = 1;
+}
+
+message WakeUpRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional GameInfo gameinfo = 3;
+}
+/////////////顺顺斗地主金币相关//////////////////////
+//通知客户端消息
+message NoticeClientNtc {
+    repeated int32 info_id = 1; //20:观战玩家达到最大观战局数 21:房间已关闭 22:删除房间 23:金币不足从座位被T出 24:下注超时 25:重启房间 26:被T提示
+}
+
+//奖励列表
+message GetRewardListReq {
+    optional int32 rid = 1;
+}
+
+message SubsidyInfo {
+    optional double config_min_coin = 1; //低于数
+    optional double subsidy_coin = 2; //可领取数
+    optional int32 can_attach_num = 3; //可领取剩余数次数
+}
+
+message GetRewardListRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 remain_award_status = 3; //连续登陆 0未领取 1领取
+    optional SubsidyInfo subsidy_info = 4; //破产补助相关
+    optional GoodsInfo goods_info = 5; //特价金币
+}
+
+message SubsidyNtc {
+    optional double coins_num = 1; //补贴数量
+    optional int32 subsidy_num = 2; //补贴次数
+}
+
+//领取特价相关信息
+message SpecialCoinInfoReq {
+    optional int32 rid = 1;
+    optional int32 buy_type = 2; //1:特价金币1 2:特价金币2 3:限购礼包 4:每日特价 5:助战礼包
+}
+
+message GoodsInfo {
+    optional string discount = 1; //打折
+    optional string special_price = 2; //特价 人民币
+    optional int32 is_can_buy = 3; //0可以购买该物品 1不能购买
+    repeated AwardItem award_list = 4; //物品列表
+    optional int32 goods_id = 5; //recharge_list配置对应的id
+}
+
+message SpecialCoinInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 last_limit_buy_time = 3; //刷新间隔天数
+    repeated GoodsInfo goods_info_list = 4; //物品信息
+}
+
+//购买特价金币
+message BuySpecialCoinReq {
+    optional int32 buy_type = 1; // 1:特价金币1 2:特价金币2 3:限购礼包 4:每日特价 5:助战礼包
+    optional int32 pos_index = 2; //购买位置序列 1,2,3
+}
+
+message BuySpecialCoinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated AwardItem award_list = 3;
+}
+
+//连续登陆金币奖励相关信息
+message RemainLoginAwardInfoReq {
+    optional int32 rid = 1;
+}
+
+message RemainLoginAwardInfo {
+    repeated AwardItem award_list = 1; //奖励
+}
+
+message RemainLoginAwardInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 remain_day_num = 3; //登陆天数
+    optional int32 is_attach_coin = 4; //0未领取 1已领取
+    repeated RemainLoginAwardInfo award_info = 5; //奖励物品
+}
+
+//领取连续登陆的奖励
+message GetRemainLoginAwardReq {
+    optional int32 rid = 1;
+}
+
+message GetRemainLoginAwardRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated AwardItem award_list = 3;
+}
+
+//请求能否补助
+message SubsidyReq {
+    optional int32 rid = 1;
+}
+
+message SubsidyRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 subsidy_num = 3; //今天补助次数
+    repeated AwardItem award_list = 4;
+}
+
+//商店相关
+message GetShopInfoReq {
+    optional int32 type = 1; //请求的是(1金币 2道具 3会员 4一元商品 5钻石)
+}
+
+//物品相关
+message ShopItemInfo {
+    optional int32 goods_id = 1;
+    optional string goods_icon = 2; //发送icon名字
+    optional string goods_name = 3; //物品名字
+    optional string price = 4; //价格 人民币
+    repeated AwardItem award_list = 5; //物品
+    repeated AwardItem extra_award_list = 6;
+    optional string ios_order_name = 7; //苹果商店的物品名字
+    optional string extra_pre = 8; //额外赠送比例
+    optional string baidu_point = 9; //百度计费点
+}
+
+message GetShopInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated ShopItemInfo shop_item_list = 3; //商城金豆相关物品列表
+}
+
+//购买物品
+message BuyShopInfoReq {
+    optional int32 type = 1; //请求的是(1金豆 2道具 3会员 4一元商品)
+    optional int32 goods_id = 2; //物品id
+}
+
+message BuyShopInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated AwardItem award_list = 3;
+}
+
+//嗨翻天
+message HaifantianInfoReq {
+    optional int32 rid = 1;
+}
+
+message HaifantianInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated AwardItem award_list = 3;
+    optional int32 money_rmb = 4; //显示的人民币
+}
+
+//获取物品
+message GetHaifantianGoodsReq {
+    optional int32 rid = 1;
+}
+
+message GetHaifantianGoodsRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+////////////背包相关/////////////////
+message GetBagInfoReq {
+    optional int32 rid = 1; //玩家id
+    optional int32 get_bag_type = 2; //获取背包物品类型(0:全部 2:道具 3奖券 4实物)
+}
+
+message BagInfo {
+    optional int32 id = 1; //物品id
+    optional int32 num = 2; //物品数量
+    optional int32 goods_type = 3; //物品分类 (--1 普通物品 2--道具 3--奖券 4--实物卡)
+}
+
+message GetBagInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated BagInfo info_list = 3; //物品列表
+}
+
+message UsePropReq {
+    optional BagInfo bag_info = 1; //物品
+}
+
+message UsePropRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//使用道具
+message UsePropCardsNtc {
+    optional int32 prop_type = 1; //1:看底牌 2:记牌器
+    repeated int32 cards = 2;
+}
+
+//活动相关
+message HuoDongInfoReq {
+    optional int32 rid = 1;
+}
+
+message HuoDongInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated int32 activity_ids = 3; //1天天抽奖 2.一元礼包 3.微信分享
+}
+
+//转盘状态
+message TurntableStatusReq {
+    optional int32 rid = 1;
+}
+
+message TurntableInfo {
+    optional int32 goods_pos = 1; //抽取到的物品 位于列表的位置
+    repeated AwardItem award_list = 2; //可能配置多个奖品
+}
+
+message TurntableStatusRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated TurntableInfo goods_list = 3; //客户端需要显示的物品列表
+    optional int32 need_master_score = 4; //需要的
+}
+
+//转盘抽奖
+message TurntableLuckDrawReq {
+    optional int32 rid = 1; //转盘抽奖请求
+}
+
+message TurntableLuckDrawRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 goods_pos = 3; //抽取到的物品 位于列表的位置
+    optional int32 next_need_master_score = 4; //下次需要的大师分
+}
+
+//微信分享状态
+message WeinxinShareStatusReq {
+    optional int32 rid = 1;
+}
+
+message WeinxinShareStatusRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 status = 3; //0:可以分享 1:不能分享
+    repeated AwardItem items = 4; //得到的物品
+}
+
+//分享后领取物品
+message WeinxinShareReq {
+    optional int32 rid = 1;
+}
+
+message WeinxinShareRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated AwardItem items = 3; //得到的物品
+}
+
+//产生癞子
+message CreateLaiziNtc {
+    repeated int32 cards = 1;
+}
+
+message RedSecondItem {
+    optional int32 id = 1; // 活动(1:抽奖 2.一元礼包 3.微信分享) 任务(1:每日任务 2:系统任务) 免费金币(1:连续登陆 2:破产补助 3:任务奖赏)
+    optional int32 status = 2; //1显示红点 2不显示红点
+}
+
+message RedPrimaryItem {
+    optional int32 id = 1; //2活动 3:任务 4:免费金币 5:注册送现金(由于没有2级界面item_list就为空表)
+    optional int32 status = 2; //一级界面 1显示红点 2不显示红点
+    repeated RedSecondItem item_list = 3; //2级界面
+}
+
+//红点提示
+message RedNtc {
+    repeated RedPrimaryItem red_list = 1;
+}
+
+//{{{ 淘汰赛赛相关 ----------------
+
+// 客户端主动请求获取比赛各种杂项消息
+message KnockoutMiscInfoReq {
+}
+
+message KnockoutPlayerInfo { // 参见 KnockoutPlayerInfoNtc
+                             optional string cfg_uuid = 1;
+                             optional string game_uuid = 2;
+                             optional int32 rid = 3;
+                             optional int32 rank = 4;
+                             optional int32 score = 5;
+                             optional int32 reason = 6; // 参见 EKnockoutMatchLeaveReasonType
+                             optional int32 state = 7; // 参见 EKnockoutMatchStateType
+                             optional int32 round = 8;
+                             optional int32 total_player = 9; //总人数
+
+                             // 移位淘汰赛
+                             optional int32 regist_min_count = 13;
+                             repeated int32 prefer_left_count = 14; // 每轮晋级人数(预赛)
+}
+
+message KnockoutMiscInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+
+    optional string cfg_uuid = 11;
+    optional int32 template_id = 12;
+    optional int32 group_type = 13;
+    optional string svr_id = 14;
+    optional int32 contest_address = 15;
+    optional string game_uuid = 16; // 是否参加了对应的uuid
+    optional int32 create_table_id = 17;
+    optional KnockoutPlayerInfo playinfo = 18; //game_uuid 存在的时候查询
+    optional int32 open_interval_time = 19; // 开启间隔 // 可用于区分定时开启比赛
+    repeated string cfg_uuids = 20; // 已经报名(包括开始了的)
+}
+
+// 单独请求某个比赛信息
+message KnockoutContestInfoReq {
+    optional string cfg_uuid = 1;
+}
+
+message KnockoutContestInfo {
+    optional string cfg_uuid = 1;
+    optional int32 group_type = 2;
+    optional int32 template_id = 3; // 用于客户端查找显示配置
+    optional string svr_id = 4;
+    optional int32 contest_address = 5;
+    optional int32 open_interval_time = 6; // 开启间隔 // 可用于区分定时开启比赛 0 表示立即开赛
+    repeated AwardItem deduct_item_list = 10; //需要扣除的物品(任选其一) 没有表示免费
+
+    optional int32 show_num = 11; // 显示人数
+    optional int32 regist_count = 12; // 报名人数
+
+    optional int32 countdown = 21; // 倒计时 //秒 -- -2：已结束; -1：未开始; >0：下一场开启时间
+    optional int32 next_contest_time = 22; // 下一场比赛时间
+    optional bool is_regist = 23; // 是否报名
+    optional string game_uuid = 24; // 是否参加了对应的uuid
+    optional bool is_confirm_entry = 25;
+}
+
+message KnockoutContestInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional KnockoutContestInfo info = 3;
+}
+
+//请求淘汰赛赛列表
+message KnockoutListReq {
+    optional int32 group_type = 1; // 比赛分组
+}
+
+message KnockoutListRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 group_type = 3;
+    repeated KnockoutContestInfo list = 4;
+}
+
+// 报名
+message KnockoutRegistReq {
+    optional string svr_id = 1; //淘汰赛服务器id
+    optional int32 contest_address = 2; //淘汰赛某项比赛服务id
+    optional string cfg_uuid = 3; //cfg_uuid
+    optional int32 deduct_item = 4; //扣除的道具ID   1金币 500门票
+}
+
+message KnockoutRegistRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional string cfg_uuid = 3;
+    optional int32 regist_count = 4;
+}
+
+// 取消报名
+message KnockoutUnRegistReq {
+    optional string svr_id = 1;
+    optional int32 contest_address = 2;
+    optional string cfg_uuid = 3;
+}
+
+message KnockoutUnRegistRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional string cfg_uuid = 3;
+    optional int32 regist_count = 4;
+}
+
+// 通知玩家赛前确认参加比赛 (定时开启的比赛才有)
+message KnockoutConfirmEntryNtc {
+    optional string svr_id = 1;
+    optional int32 contest_address = 2;
+    optional string cfg_uuid = 3;
+    optional int32 template_id = 4; // 用于客户端查找显示配置
+    optional int32 diff_time = 5; // 距离比赛开始时间 秒
+}
+
+// 赛前确认参加比赛 (定时开启的比赛才有)
+message KnockoutConfirmEntryReq {
+    optional string svr_id = 1;
+    optional int32 contest_address = 2;
+    optional string cfg_uuid = 3;
+    optional int32 entry_flag = 4; // 0 : 确认参加 ; 1 : 暂不参加
+}
+
+message KnockoutConfirmEntryRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional string svr_id = 3;
+    optional int32 contest_address = 4;
+    optional string cfg_uuid = 5;
+    optional int32 entry_flag = 6;
+}
+
+// 通知玩家某场比赛流局
+message KnockoutAbortiveNtc {
+    optional string cfg_uuid = 1;
+    optional int32 rid = 2;
+}
+
+// 通知比赛本轮轮空
+message KnockoutUnMatchNtc {
+    optional string cfg_uuid = 1;
+    optional string game_uuid = 2;
+    optional int32 state = 3; //
+    optional int32 round = 4;
+}
+
+// 通知玩家基本信息(排名和分数)
+message KnockoutPlayerInfoNtc {
+    optional string cfg_uuid = 1;
+    optional string game_uuid = 2;
+    optional int32 rid = 3;
+    optional int32 rank = 4;
+    optional int32 score = 5;
+    optional int32 reason = 6; // 参见 EKnockoutMatchLeaveReasonType
+    optional int32 state = 7; // 参见 EKnockoutMatchStateType
+    optional int32 round = 8;
+    optional int32 total_player = 9; //总人数
+    repeated AwardItem reward = 10;
+
+    // 带上服务地址 --> 方便断线重连处理
+    optional string svr_id = 11;
+    optional int32 contest_address = 12;
+
+    // 移位淘汰赛
+    optional int32 regist_min_count = 13;
+    repeated int32 prefer_left_count = 14; // 每轮晋级人数(预赛)
+}
+
+// 请求某具体比赛进行中信息
+message KnockoutGameInfoReq {
+    optional string cfg_uuid = 1;
+    optional string game_uuid = 2;
+    optional string svr_id = 3;
+    optional int32 contest_address = 4;
+}
+
+message KnockoutGameInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional string cfg_uuid = 3;
+    optional string game_uuid = 4;
+
+    optional int32 state = 5; // 参见 EKnockoutMatchStateType
+    optional int32 round = 6;
+    optional int32 left_table_count = 7; //剩余桌子数
+    optional int32 rank = 8;
+    optional int32 score = 9;
+    optional int32 total_player = 10;
+}
+
+//查看排名
+message KnockoutRankReq {
+    optional string svr_id = 1;
+    optional int32 contest_address = 2;
+    optional string cfg_uuid = 3;
+    optional string game_uuid = 4;
+}
+
+message KnockoutRankPlayerInfo {
+    optional int32 rid = 1;
+    optional int32 score = 2; //积分
+    optional int32 rank = 3; //排名
+    optional string rolename = 4;
+    optional string logo = 5;
+    optional int32 sex = 6;
+}
+
+message KnockoutRankRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional string cfg_uuid = 3;
+    optional string game_uuid = 4;
+    repeated KnockoutRankPlayerInfo rank_list = 5;
+}
+
+//}}} 淘汰赛赛相关 ----------------
+
+// 使用 兑换码
+message UseCDKEYReq {
+    optional string code = 1;
+}
+
+message UseCDKEYRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional string code = 3;
+    repeated AwardItem reward = 4;
+}
+
+//获取兑奖中心信息请求
+message GetDuiJiangInfoReq {
+    optional int32 type = 1; //请求的是(1兑换道具 2红包/话费 3兑换实物)
+}
+
+//兑奖中心的物品
+message DuiJiangItemInfo {
+    optional int32 goods_id = 1;
+    optional string goods_icon = 2; //发送icon名字
+    optional string goods_name = 3; //物品名字
+    optional int32 need_goods_id = 4; //需要的物品ID
+    optional int32 need_goods_num = 5; //需要的物品ID个数
+    optional AwardItem award = 6; //兑换的物品
+}
+
+message GetDuiJiangInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated DuiJiangItemInfo item_list = 3; //商城金豆相关物品列表
+}
+
+message UserExtraInfo {
+    optional string name = 1;
+    optional string phone = 2;
+    optional string address = 3;
+}
+
+//兑换物品
+message DuiJiangReq {
+    optional int32 type = 1; //请求的是(1兑换道具 2红包/话费 3兑换实物)
+    optional int32 goods_id = 2; //物品id
+    optional UserExtraInfo user_extra_info = 3; //玩家额外信息
+}
+
+message DuiJiangRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 type = 3; //请求的是(1兑换道具 2红包/话费 3兑换实物)
+    optional int32 goods_id = 4; //物品id
+    optional int32 now_time = 5; //兑换当前时间
+}
+
+// 请求充值
+message RechargeReq {
+    optional Version version = 1;
+    optional int32 good_id = 2; //商品id
+    optional int32 pay_type = 3; //支付类型
+    optional string option_data = 4; //附加数据
+    optional string ios_pay_order = 5; //苹果预付单号
+}
+
+// 响应充值
+message RechargeRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional string order_id = 3; // 订单号
+    optional int32 pay_type = 4; // 支付类型   	1 IOS支付  2 微信支付  3 支付宝 4 赤链支付 5 耀娱支付  6 AOA
+    optional int32 good_id = 5; // 商品id
+    optional string option_data = 6; // 订单附加数据
+    optional string ios_pay_order = 7; // 苹果预付单号
+}
+//通知发货
+message DeliverGoodNtc {
+    optional string order_id = 1; //订单号
+    optional string option_data = 2; //附加数据
+    repeated AwardItem awards = 3; //奖励物品
+}
+
+//绑定aoa消息结果
+message BindAOAReq {
+    optional int32 rid = 1;
+}
+
+
+message BindAOARes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional string actAddress = 3;
+    optional string tkey = 4;
+}
+
+// 捐献
+message DonateReq {
+    optional int32 goods_id = 1;
+    optional int32 goods_num = 2;
+}
+
+
+message DonateRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 goods_id = 3;
+    optional int32 goods_num = 4;
+}
+
+message DonateRecordItem {
+    optional int32 id = 1; // 编号 --> 客户端不显示
+    optional int32 rid = 2;
+    optional int32 goods_id = 3;
+    optional int32 goods_num = 4;
+    optional int32 update_time = 5;
+}
+
+// 捐献记录 --> 个人(只需最新20条) --> 最多返回20条即可
+message DonateRecordSelfReq {
+}
+
+message DonateRecordSelfRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    repeated DonateRecordItem list = 3;
+}
+
+// 捐献记录 --> 所有(只需最近10天) --> 分页请求
+message DonateRecordAllReq {
+    optional int32 hour24 = 1; //第一次请求为0即可;第二次请求返回DonateRecordAllRes里的hour24即可
+    optional int32 index = 2; //请求数据开始编号 --> 第一次请求为0; 如果是下一个分页请求index为列表里最后一条数据(DonateRecordItem)对应id
+    optional int32 page_size = 3; //分页大小(不填写默认为50,默认也50)
+}
+
+message DonateRecordAllRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 hour24 = 3; // 返回一个标记
+    optional int32 index = 4; // DonateRecordAllReq 里 index 原样返回
+    optional int32 size = 5; // 返回的数据条数
+    repeated DonateRecordItem list = 6;
+}
+
+//玩家得到礼品券通知
+message KingCardNtc {
+    optional AwardItem award_item = 1;
+}
+
+// 庄家变化通知
+message DzChangeNtc {
+    optional int32 dz_seat_index = 1; // 地主索引
+    optional int32 change_type = 2; // 1 随机 2 普通换庄 3 续庄
+}
+
+// 起簸通知 牛牛簸簸玩法
+message DzScoreChangeNtc {
+    optional int32 rid = 1; // 地主rid
+    optional int32 seat_index = 2; // 地主索引
+    optional int32 base_score = 3; // 起簸分数
+    optional int32 curscore = 4; // 当前分数
+    optional int32 change_type = 5; // 1 起簸 2 换庄
+}
+
+// 通知续庄 牛牛簸簸玩法
+message DzContinueNtc {
+    optional int32 rid = 1; // 地主rid
+    optional int32 seat_index = 2; // 地主索引
+    optional int32 action_timeout = 3; //玩家操作限时
+}
+
+// 选择续庄 牛牛簸簸玩法
+message DzContinueReq {
+    optional int32 is_dz_continue = 1; // 是否续庄 0 不续 1 续
+}
+
+// 选择续庄结果 牛牛簸簸玩法
+message DzContinueRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+}
+
+// 续庄结果通知 牛牛簸簸玩法
+message DzContinueResultNtc {
+    optional int32 rid = 1; // 地主rid
+    optional int32 seat_index = 2; // 地主索引
+    optional int32 is_dz_continue = 3; // 是否续庄
+}
+
+message BetWinInfo {
+    optional int32 rid = 1;
+    optional double winmoney = 2; //最终赢分
+}
+
+message GameEndResultNtc2Watch {
+    optional int32 play_rule_type = 1;
+    optional int32 game_type = 2;
+    optional double dz_winmoney = 3; // 庄家赢分
+    optional double winmoney = 4; // 自己赢分
+    repeated RankPlayerInfo rank_list = 5; // 排行榜，这里只有前6名
+    optional int32 action_to_time = 6; // 下局开始时间
+    repeated RecordCell record = 7; // 本局各座位的输赢(id是座位号,num为输赢,1胜0负)
+    optional RoadNode road_node = 14; //写路
+    repeated int32 cards_zhuang = 15; //庄家牌
+    repeated int32 cards_xian = 16; //闲家的牌
+    optional int32 choushui_num = 17; //抽水值
+    repeated int32 dizhu_win_list = 18; //地主 牛牛(天地玄黄每个位置的 输赢分数) 中发白(中发白每个位置的 输赢分数)
+    repeated int32 player_win_win_list = 19; //玩家 牛牛(天地玄黄每个位置的输赢分数)  中发白(中发白每个位置的输赢分数)  百家乐(百家乐每个位置的输赢分数)
+    repeated BetWinInfo players_bet_win_list = 20; //每个玩家的总输赢分数 （牛牛 中发白 百家乐)
+    repeated RankPlayerInfo rank_top_list = 21; //这局前3名玩家的输赢(牛牛独有)
+    optional RankPlayerInfo lucky = 22; //统计出来的幸运星 （牛牛 红黑 中发白 百家乐）
+}
+
+// 申请上庄的玩家列表
+message QDZPlayerListNtc {
+    repeated QDZPlayerInfo qdz_players = 1;
+}
+
+message GetTableRankListReq {
+
+}
+
+message GetTableRankListRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated RankPlayerInfo rank_list = 3; // 排行榜
+}
+
+//请求埋点
+message BuryingPointReq {
+    optional int32 type_id = 1; //埋点对应id,id与文档中的数值对应
+}
+
+message BuryingPointRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//牌局记录
+message GetDetailInfoReq {
+    optional int32 room_type = 1; //
+}
+
+message WinInfo {
+    optional string bet_index = 1; //服务器直接传内容
+    optional double bet_num = 2; //对应位置下注
+    optional double win_num = 3; //对应位置输赢
+}
+
+message DetailInfo {
+    optional string order_id = 1; //牌局编号
+    optional int32 rounds_id = 2; //房号
+    optional double validbet = 3; //有效投注
+    optional double total_win = 4; //盈利
+    optional int32 end_time = 5; //结束时间
+    repeated WinInfo win_info_list = 6; //赢取的详情
+}
+
+message GetDetailInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated DetailInfo info_list = 3; //相关详情
+}
+
+//客户端图标展示顺序
+message GetClientIcoinRankReq {
+    optional int32 rid = 1;
+}
+
+message IconRankInfo {
+    optional int32 type_id = 1; //1全部 2老虎机 3棋牌 4最近玩过
+    repeated int32 room_type_ids = 2; //游戏id
+}
+
+message GetClientIcoinRankRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated IconRankInfo icon_rank_list = 3; //图标显示顺序
+}
+
+//获取拉霸赢分排行
+message GetSlotRankReq {
+    optional int32 game_type = 1; //游戏类型
+    optional int32 room_level = 2;
+    optional int32 type_id = 3; //1：日排名 2：周排名
+}
+
+message SlotRankInfo {
+    optional int32 rank = 1;
+    optional int32 rid = 2; //rid
+    optional string rolename = 3; //昵称
+    optional int32 multiple = 4; //倍率
+    optional int32 update_time = 5; //时间
+}
+
+message GetSlotRankRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated SlotRankInfo slot_rank_list = 3; //拉霸排行
+}
+//--------------------slot message -----------------------------
+//--------------------slot message -----------------------------
+//--------------------slot message -----------------------------
+//--------------------slot message -----------------------------
+//--------------------slot message -----------------------------
+message DoOneSpinReq {
+    optional int32 line_count = 1; //线数(1~9)
+    optional double bets_num = 2; //赌注(1/2/5/10/15/20/25)
+    optional int32 room_level = 3; //1初级场 2中级场 3高级场
+}
+
+//通过整个矩阵来计算的分数
+message ScoreOnWholeMatrix {
+    optional int32 type = 1; //1: all (所有的元素 都是 一样)  2: any 所有的元素属于同一组
+    optional double score = 2; //该组合得分
+    optional double multiple = 3; //该组合原始得分
+}
+
+
+message ScoreGroupOnOneLine {
+    optional int32 line_id = 1; //第几条线
+    optional int32 element_id = 2; //得分的元素
+    optional int32 element_count = 3; //得分的数量
+    optional double score = 4; //该线得到的分数 multiple * bets_num
+    optional int32 multiple = 5; //翻倍数
+    optional bool from_right = 6; //该组合是否是从右边往左开始算分的(为true的时候就是)
+}
+
+//一行的元素
+message OneRowItems {
+    repeated int32 items = 1; // 各种元素 什么 苹果 ,铃铛等
+}
+
+message DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+
+    repeated OneRowItems item_rows = 3; //随机出来的二维数组元素
+
+    optional double win_point = 4; //赢了多少分
+    optional int32 win_free_times = 5; //免费次数
+
+
+    repeated ScoreGroupOnOneLine score_group_on_lines = 6; //能够得到分数的线上组合
+
+    optional double bonus_multiple = 7; //最后得分是 bonus_multiple * bonus_score
+    repeated double bonus_score_list = 8; // 已经给客户端指定了 随机的分数 ,不管玩家怎么选 都是这个分了
+    repeated double bonus_random_score = 9; // 宝箱随机的分数(数组) (目前是 1-9 个分数,客户端需要将该分数顺序打乱)
+
+    optional int32 remain_free_spin_times = 10; //剩余免费次数
+
+    optional int32 win_multiple = 11; //赢得的倍数
+
+    optional double spin_consume = 12; //消耗的金币数量
+
+    optional double jackpot_win_point = 13; //jackpot大奖分数
+}
+
+// slot 小游戏 获取上次 spin 的 bonus game 中的分数
+// 该消息 必须在 DoOneSpinReq 之前发送 ,否则分数会被清掉
+message SlotBounsScoreReq {
+}
+message SlotBounsScoreRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional double score = 3; // 友情提示加了多少分
+}
+
+
+message SlotGameConfigReq {
+    optional int32 theme = 1; // 配置类型 1: slot
+    optional int32 type = 2; // 配置类型 1: slot
+}
+
+
+message SlotGameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 theme = 3; // 配置类型 1: slot
+    optional int32 type = 4; //配置类型
+    repeated double array1 = 5; // 1: slot 配置
+
+    optional int32 last_spin_line_count = 6; // 最后一次 线数
+    optional double last_spin_bets_num = 7; // 最后一次 赌注
+    optional int32 last_room_level = 8; // 上次所在房间等级
+
+    //-------------水浒 专用 begin ----------
+    optional double last_spin_bibei_difen = 9; // 水浒传 - 上次的比倍时的底分(上次正在比倍的时候退出了)
+    repeated double history_bibei_record = 10; // 水浒传 -- 比倍结果历史记录
+    //-------------水浒 专用 end ----------
+
+    //水果机9line 与 水浒共用
+    optional MaryGameInfo maryGameInfo = 11; // 水浒传或者9线水果机 mary game info ,用于在重新上线的时候恢复maryGame
+
+    //-------------水果机9line 专用 begin ----------
+    optional SlotFreeSpinInfo free_spin_info = 12; // 上线获得的 免费spin 相关信息
+    //-------------水果机9line 专用 end ----------
+
+    repeated int32 room_bet_multiple = 14; //{1,10,100,1000},  1:初级场 2:中级场 3:高级场 4:专业  对应不同的房间底分
+    repeated double room_enter_limit = 15; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+
+    //-------------11线水果机 专用 begin ----------
+    repeated double bonus_score_list = 16; // 已经给客户端指定了 随机的分数 ,不管玩家怎么选 都是这个分了
+    //-------------11线水果机 专用 end ----------
+}
+
+///--------------------------------
+
+// 水浒传(固定线条数)
+///---------------------------------
+
+message ShuiHu_DoOneSpinReq {
+    optional int32 bets_num = 1; //赌注(1/2/5/10/15/20/25)
+    optional int32 room_level = 2; //1初级场 2中级场 3高级场
+    optional string test_score = 9; //测试使用 发送指定的分数
+}
+
+// 玛丽小游戏相关
+message PlaySingleMaryGameInfo {
+    repeated int32 inner_eles = 1; // 内圈元素数组(有4个)
+    optional int32 inner_multiple = 2; // 内圈倍数
+    optional int32 outer_ele = 3; // 外圈元素
+    optional int32 outer_multiple = 4; // 外圈倍数
+}
+
+message MaryGameInfo {
+    repeated PlaySingleMaryGameInfo play_results = 1;
+    optional int32 can_play_times = 2; // 要显示的可以玩的次数 因为存在 外圈随机到 exit 就直接退出 ,所以实际玩的会和这个不一致
+    optional int32 multiple = 3; //增加的总倍数
+    optional double score = 4; //增加的总分数
+    optional int32 cur_step = 5; //当前客户端已经执行到第几步了(初始为0)
+    optional double score_on_lines = 6; // 进入小玛丽之前线上的得分
+}
+
+//请求操作一次小玛丽游戏
+message ShuiHu_MaryGameNextStepReq {
+    optional int32 step = 1; //第几步
+}
+message ShuiHu_MaryGameNextStepRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 step = 3; //请求的步数
+
+    optional bool is_finished = 4; //如果为真 说明 maryGame游戏已经完成
+}
+
+message ShuiHu_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+
+    repeated OneRowItems item_rows = 3; //随机出来的二维数组元素
+
+    optional int32 win_point = 4; //赢了多少分
+    optional int32 win_free_times = 5; //免费次数
+
+    repeated ScoreGroupOnOneLine score_group_on_lines = 6; //能够得到分数的线上组合
+
+    optional MaryGameInfo maryGameInfo = 7; // 如果返回该字段 说明 可以玩mary game 了
+
+    optional int32 win_multiple = 11; //赢得的倍数
+
+    optional int32 spin_consume = 12; //消耗的金币数量
+
+    optional ScoreOnWholeMatrix score_on_whole_matrix = 13; //矩阵整个一起组合的分数,如果存在,也只会有一种情况
+    optional int32 jackpot_win_point = 14; //jackpot大奖分数
+}
+
+//是否比倍请求
+message ShuiHu_SelectWhetherBibeiReq {
+    optional bool is_do_bibei = 1; // 为 true 的时候比倍 , false 的时候 得分
+}
+
+message ShuiHu_SelectWhetherBibeiRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional bool is_do_bibei = 3; // 玩家自己的选择
+    optional int32 win_point = 4; //能够 拿到的分数
+
+    repeated int32 history_bibei_record = 5; //比倍历史记录(最多存储 20条)(在is_do_beibei 为true的时候 返回) 记录的顺序是按照最新的在最后面
+}
+
+//开始 比倍  选择
+message ShuiHu_DoBibeiReq {
+    optional int32 select = 1; //比倍的选择 1: 小 2:和  3:大
+}
+
+
+message ShuiHu_DoBibeiRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 select = 3; //自己的选择
+
+    optional int32 dice_1 = 4; //第一个 色子的值
+    optional int32 dice_2 = 5; //第二个 色子的值
+
+    optional int32 accumulate_point = 6; //累计分数 只有在赢了的情况下才有分
+    optional int32 win_multiple = 7; //赢得的倍数 没有赢就是 0
+
+    optional bool is_select_correct = 8; //自己的选择 是否正确
+}
+
+//盈利排行榜奖励
+message RankInfo {
+    optional int32 rank = 1;
+    optional int32 rid = 2; //玩家id
+    optional string rolename = 3; //昵称
+    optional string photo = 4; //玩家头像
+    optional double win_coin = 5; //盈利资产
+    optional int32 vip = 6; //vip等级
+    optional int32 player_level = 7; //玩家等级
+    optional int32 online_time = 8; //在线时长
+}
+
+message GetRankInfoReq {
+    optional int32 rid = 1;
+    optional int32 type_id = 2; //1:今日赢金币 2:今日在线时长 3:等级
+}
+
+message GetRankInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    repeated RankInfo rank_list = 3; //排行列表(第一位是玩家自己)
+}
+
+////////////////////银行相关//////////////////////
+//银行状态是否开启
+message GetBankInfoReq {
+    optional int32 rid = 1;
+    optional bool is_use_for_update = 2;
+}
+
+message GetBankInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional bool is_need_pwd = 3; //true:需要 false
+    optional double bank_coin = 4; //存入银行的钱（开启后才会发这个值）
+    optional bool is_use_for_update = 5;
+    optional bool is_phone_bind = 6; //手机号是否绑定(未绑定 开启银行的时候先绑定)
+    optional bool is_set_pwd = 7; //是否设置了银行密码
+}
+
+//开启银行密码
+message OpenBankPwdReq {
+    optional string pwd = 1; //银行密码
+}
+
+message OpenBankPwdRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+}
+
+//银行验证码获取
+message BankVercodeReq {
+    optional int32 rid = 1;
+}
+
+message BankVercodeRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional string vercode = 3; //验证码
+}
+
+//修改密码
+message ModifyBankPwdReq {
+    optional string pwd = 1; //银行密码
+    optional string vercode = 2; //验证码
+}
+
+message ModifyBankPwdRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+}
+
+//登陆
+message LoginBankReq {
+    optional string pwd = 1; //银行密码
+}
+
+message LoginBankRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+}
+
+//存取
+message AccessBankReq {
+    optional int32 status = 1; //1:存 2:取
+    optional double coin = 2; //操作数量
+}
+
+message AccessBankRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional double bank_coin = 3; //现在银行的金币
+}
+
+//转账
+message TransferReq {
+    optional int32 transfer_rid = 1; //收款账户rid
+    optional double coin_num = 2; //转账钱的多少
+}
+
+message TransferRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+}
+
+message TransferInfo {
+    optional int32 transfer_rid = 1; //收款rid
+    optional string transfer_name = 2; //收款玩家转账的名字
+    optional string transfer_time = 3; //转账时间
+    optional double transfer_coin_num = 4; //转账多少
+    optional int32 transfer_fee_per = 5; //手续费百分比
+
+    optional int32 from_rid = 6; //转账rid
+    optional string from_name = 7; //转账玩家名字
+
+    optional int32 status = 8; //领取状态1：未领取 2：领取 3：转账撤回
+}
+
+//转账记录
+message TransferHistoryReq {
+    optional int32 rid = 1; //玩家id
+}
+
+message TransferHistoryRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    repeated TransferInfo transfer_list = 3; //转账记录
+}
+
+//转账确信息
+message TransferConfirmationInfoReq {
+    optional int32 rid = 1;
+}
+
+message TransferConfirmationInfoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 rid = 3; //转账玩家的rid
+    optional string transfer_name = 4; //名字
+}
+
+//提现
+message CashMoneyReq {
+    optional int32 coin = 1; //提现金额
+}
+
+message CashMoneyRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 coin = 3; //返回给客户端
+}
+
+//充值或者提现成功消息
+message CashRechargeNtc {
+    optional int32 type_id = 1; //1:充值 2：提现
+    optional string notice_msg = 2; //通知消息
+}
+
+//----------福满堂消息 固定25条线------------------------
+message FuLinMen_DoOneSpinReq {
+    optional double bets_num = 1; //赌注(1/2/5/10/15/20/25)
+    optional int32 room_level = 2; //1初级场 2中级场 3高级场
+
+    optional string test_score = 9; //测试使用 发送指定的分数
+}
+
+message FuLinMen_DuiJinYuModel {
+    optional bool is_duijinyu_model = 1; //为真的时候说明在堆金玉模式里面
+
+    //剩余堆金玉免费次数(3,2,1,0),当为 0 的时候 堆金玉 is_duijinyu_model 仍然为真,此时客户端需要结束堆金玉模式
+    optional int32 remain_free_spin_times = 2;
+    optional double coin_num = 3; //金币的数量
+    optional double total_win = 4; //堆金玉总共赢的的数量
+}
+
+
+message FuLinMen_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+
+    repeated OneRowItems item_rows = 3; //随机出来的二维数组元素
+
+    optional double win_point = 4; //赢了多少分
+    optional double win_free_times = 5; //本次赢得的免费次数
+
+    repeated ScoreGroupOnOneLine score_group_on_lines = 6; //能够得到分数的线上组合
+    optional int32 remain_free_spin_times = 10; //剩余总共免费次数
+
+    optional int32 win_multiple = 11; //赢得的倍数
+
+    optional double spin_consume = 12; //消耗的金币数量
+
+
+    optional double free_spin_total_win = 13; //免费次数当前累积赢了多少
+    optional bool is_free_spin_end = 14; //免费次数是否已经结束
+
+
+    optional double duijinyu_total_win = 15; //堆金玉赢得的分数
+    optional int32 duijinyu_free_spin_time = 16; //堆金玉剩余次数
+    optional bool is_duijinyu_start = 18; //在堆金玉模式最后一次结束的时候该值为真
+    optional bool is_duijinyu_end = 19; //在堆金玉模式最后一次结束的时候该值为真
+    optional double fumantang_award_point = 20; //获得的福满堂奖励(该奖励和15个金币的奖励同时存在)
+}
+
+//免费玩的信息
+message SlotFreeSpinInfo {
+    optional int32 remain_free_spin_times = 1; // 剩余免费次数
+    optional double current_accumate_score = 2; //当前累计的分数
+}
+
+//免费玩的信息
+message DuiJinYuInfo {
+    optional int32 duijinyu_free_time = 1; // 剩余免费次数
+    repeated OneRowItems last_item_rows = 2; // 需要恢复的堆金玉矩阵
+}
+
+
+message FuLinMen_SlotGameConfigReq {
+    optional int32 type = 1; // 配置类型 1: bets 倍数
+}
+
+message FuLinMen_SlotGameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 type = 4; //配置类型
+    repeated double array1 = 5; // 1: slot 配置
+
+    optional int32 last_spin_line_count = 6; // 最后一次 线数
+    optional double last_spin_bets_num = 7; // 最后一次 赌注
+    optional int32 last_room_level = 8; // 上次所在房间等级
+
+    optional SlotFreeSpinInfo free_spin_info = 9; // 上线获得的 免费spin 相关信息
+    optional DuiJinYuInfo duijinyu_info = 10; // 上线获得的 免费spin 相关信息
+
+    optional double dafu_base_value = 11; // 大福基础值
+    optional double xiaofu_base_value = 12; // 小福基础值
+
+    optional int32 fumantang_base_multiple = 13; // 福满堂基础倍数
+
+
+    repeated double room_bet_multiple = 14; //{1,10,100,1000},  1:初级场 2:中级场 3:高级场 4:专业  对应不同的房间底分
+    repeated double room_enter_limit = 15; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+
+
+}
+
+//请求福满堂池子值
+message FuLinMen_FuManTangAwardPoolReq {
+    optional int32 room_level = 1; //错误原因 0表示成功
+}
+
+message FuLinMen_FuManTangAwardPoolRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional double fumantang_pool_value = 3;
+}
+
+//----------------------------------
+
+//街霸----------------------------------
+message JieBa_DoOneSpinReq {
+    optional double bets_num = 1; //赌注(1/2/5/10/15/20/25)
+    optional int32 room_level = 2; //1初级场 2中级场 3高级场
+
+    optional string test_score = 9; //测试使用 发送指定的分数
+}
+
+
+message JieBa_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+
+    repeated OneRowItems item_rows = 3; //随机出来的二维数组元素
+
+    optional double win_point = 4; //赢了多少分
+    optional int32 win_free_times = 5; //本次赢得的免费次数
+
+    repeated int32 score_eles_pos = 6; // 用一维数组对应二维矩阵 ,15 个元素的数组,反应在矩阵中 从第一行开始,从左往右15个元素,如果该位置是属于得分,元素 就是1 否则就是0
+    optional int32 remain_free_spin_times = 10; //剩余总共免费次数
+
+    optional int32 win_multiple = 11; //赢得的倍数
+
+    optional double spin_consume = 12; //消耗的金币数量
+
+    optional int32 free_spin_total_win = 13; //免费次数当前累积赢了多少
+    optional bool is_free_spin_end = 14; //免费次数是否已经结束
+
+    repeated OneRowItems bonus_multiple_array = 15; //bonus游戏需要显示的行,其中>1000数字代表红色宝箱,减去 1000 以后就是实际倍数,每行的第一个数字就是玩家一定选中的宝箱
+    optional int32 bonus_init_free_times = 16; //初始剩余 bonus play 次数,该字段不为0 可以判断是否进入bonus游戏
+
+    optional double jackpot_win_point = 17; //jackpot大奖分数
+
+}
+
+//请求操作一次bonus game
+message JieBa_BonusGameNextStepReq {
+    optional int32 step = 1; //客户端 走了 第几步 从1 开始
+    optional int32 box_select = 2; //玩家选择的宝箱
+    optional int32 total_step = 3; //总步数
+}
+message JieBa_BonusGameNextStepRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 step = 3; //当前已经走到了那一步
+    optional bool is_finished = 4; //如果为真 说明 小游戏已经完成
+}
+
+//街霸bonus游戏数据
+message JieBa_BonusGameInfo {
+    repeated OneRowItems bonus_multiple_array = 1; //bonus游戏需要显示的行,其中>1000数字代表红色宝箱,减去 1000 以后就是实际倍数,每行的第一个数字就是玩家一定选中的宝箱
+    optional int32 cur_step = 2; //当前客户端已经执行到第几步了(初始为0)
+    optional int32 bonus_init_free_times = 3; //剩余bonus 玩耍次数
+    repeated int32 box_select_array = 4; // 执行的步数里面玩家选择的宝箱
+}
+
+
+message JieBa_SlotGameConfigReq {
+    optional int32 type = 1; // 配置类型 1: bets 倍数
+}
+
+message JieBa_SlotGameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 type = 4; //配置类型
+    repeated double array1 = 5; // 1: slot 配置
+
+    optional int32 last_spin_line_count = 6; //最后一次线数
+    optional double last_spin_bets_num = 7; // 最后一次 赌注
+    optional int32 last_room_level = 8; // 上次所在房间等级
+
+    optional SlotFreeSpinInfo free_spin_info = 9; // 上线获得的 免费spin 相关信息
+    optional JieBa_BonusGameInfo bonus_game_info = 10; // 上线获得的 上次的bonus信息
+
+    repeated int32 room_bet_multiple = 11; //{1,10,100,1000},  1:初级场 2:中级场 3:高级场 4:专业  对应不同的房间底分
+    repeated double room_enter_limit = 12; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+}
+
+////----------------------------------
+////slot sanguo
+message SanGuo_DoOneSpinReq {
+    optional int32 bets_num = 1; //赌注(1/2/5/10/15/20/25)
+    optional int32 room_level = 2; //1初级场 2中级场 3高级场
+
+    optional string test_score = 9; //测试使用 发送指定的分数
+}
+
+
+message SanGuo_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+
+    repeated OneRowItems item_rows = 3; //随机出来的二维数组元素
+
+    optional int32 win_point = 4; //赢了多少分
+    optional int32 win_free_times = 5; //本次赢得的免费次数
+
+    repeated ScoreGroupOnOneLine score_group_on_lines = 6; //能够得到分数的线上组合
+
+
+    optional int32 bonus_remain_point = 7; //如果为0  -- 则说明进入吃鸡游戏了
+    optional SanGuo_BonusGameStartInfo bonus_start_info = 8;
+
+    optional int32 win_multiple = 11; //赢得的倍数
+    optional int32 spin_consume = 12; //消耗的金币数量
+}
+
+message SanGuo_RobotSelectInfo {
+    optional int32 food_select = 1; // 1:包子 2:鸡腿
+    optional int32 is_success = 2; //消耗的金币数量
+    optional int32 need_time = 3; // 吃完需要多少时间
+}
+
+
+message SanGuo_BonusGameStartInfo {
+    repeated SanGuo_RobotSelectInfo robotOne = 1; //机器人1 选择的
+    repeated SanGuo_RobotSelectInfo robotTwo = 2; //机器人2 选择的
+    optional int32 total_time = 3; //游戏总时间(多少多少秒)
+    optional int32 remain_play_time = 4; //剩余游戏时间(如果是刚开始 则该值 等于 total_time)
+}
+
+//请求操作一次bonus game
+message SanGuo_BonusGameSelectReq {
+    optional int32 food_select = 1; // 食物选择 索引 1:包子 2:鸡腿
+}
+message SanGuo_BonusGameSelectRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 food_select = 3; //
+    optional int32 is_success = 4; //  1:成功  2:呕吐
+    optional int32 need_time = 5; // 吃完需要多少时间
+}
+
+message SanGuo_BonusGameEndNtc {
+    optional bool is_max_multiple = 1; //是否是赢得最多的倍数(1:是 0 :不是)
+    optional int32 win_point = 2; //赢了多少分
+    optional int32 win_multiple = 3; //赢得的总倍数
+    optional int32 bonus_remain_point = 4; // bouns 点数恢复成之前的点数
+}
+
+
+message SanGuo_SlotGameConfigReq {
+    optional int32 type = 1; // 配置类型 1: bets 倍数
+}
+
+message SanGuo_SlotGameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 type = 4; //配置类型
+    repeated int32 array1 = 5; // 1: slot 配置
+
+    optional int32 last_spin_line_count = 6; //最后一次线数
+    optional int32 last_spin_bets_num = 7; // 最后一次 赌注
+    optional int32 last_room_level = 8; // 上次所在房间等级
+
+    optional int32 bonus_remain_point = 9; //bonus 游戏开启剩余的点数
+    optional SanGuo_BonusGameStartInfo bonus_start_info = 10;
+
+    // optional SanGuo_BonusGameInfo bonus_game_info = 10; // 上线获得的 上次的bonus信息
+
+    repeated int32 room_bet_multiple = 11; //{1,10,100,1000},  1:初级场 2:中级场 3:高级场 4:专业  对应不同的房间底分
+    repeated int32 room_enter_limit = 12; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+}
+
+//百家乐写路
+message RoadNode {
+    optional int32 state = 1; //1庄赢 2:闲赢 3:和
+    optional bool is_zhuangdui = 2; //庄对
+    optional bool is_xiandui = 3; //闲对
+    optional bool is_tianpai = 4; //天牌
+}
+
+//红黑写路
+message HHRoadNode {
+    optional int32 state = 1; //1:红 2:黑
+    optional int32 card_type = 2; //1豹子 2同花顺 3同花 4顺子 5对子 6小对子(小于9) 7杂牌
+}
+
+//龙虎写路
+message LHRoadNode {
+    optional int32 state = 1; //1龙 2虎 3和局
+    optional int32 card_type = 2; //目前就一种类型 单牌
+}
+
+message PropRoomInfo {
+    optional int32 room_type = 1;
+    repeated int32 game_type = 2;
+    optional bool is_close_all = 3;
+}
+
+//系统退出或添加
+message PropRoomNtc {
+    repeated PropRoomInfo limit_room_info = 1;
+}
+
+message PropMoneyPageInfo {
+    optional int32 type_id = 1; //type_id 1充值 2提现
+    optional int32 status = 2; //status 1开启 2:关闭
+}
+
+//主动通知充值页面与提现页面状态
+message PropMoneyPageInfoNtc {
+    repeated PropMoneyPageInfo limit_money_page_info = 1;
+}
+
+//slot jackpot 列表获取 , 用于 在大厅 获取所有的 jackpot 值
+
+// SLOT_CLASSIC = 13,
+// SLOT_SHUIHU = 14, -- slot 水浒
+// SLOT_FULINMEN = 15, -- slot 福临门
+// SLOT_JIEBA = 16, -- slot 街霸
+message SlotJackPotPoolValReq {
+    optional int32 req_game_type = 1; //如果为0 就是所有slot 主题 ,指定了就是指定主题的game_type
+}
+message SlotJackPotPoolValInfo {
+    optional int32 game_type = 1; //如果为0 就是所有主题 ,指定了就是指定主题
+    repeated double jackpot_val_list = 2; //该主题所有的房间 的jackpot 值的数组 (1 初级 2 中级 3 高级)
+    repeated double jackpot_val_limit_list = 3; //jackpot限制列表
+}
+message SlotJackPotPoolValRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+
+    optional int32 req_game_type = 3; //客户端req 的参数
+    repeated SlotJackPotPoolValInfo info = 4;
+}
+
+//slot jackpot 单个房间 等级的 jackpot 值
+message SlotSingleRoomJackPotPoolValReq {
+    optional int32 req_game_type = 1; //如果为0 就是所有主题 ,指定了就是指定主题
+    optional int32 req_room_level = 2; // 1 初级 2 高级 3 中级
+}
+
+message SlotSingleRoomJackPotPoolValRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 req_game_type = 3; //客户端req 的参数
+    optional int32 req_room_level = 4; //客户端req 的参数
+    optional double jackpot_val = 5; //客户端req 的参数
+}
+
+////////////////////////龙珠探宝////////////////////////////////////////////
+message LZTanBao_SlotGameConfigReq {
+    optional int32 type = 1;
+}
+
+//玩家的当前进度
+message LZTanBao_Status_info {
+    optional int32 total_bets_num = 1; //累积下注
+    optional int32 eliminate_box = 2; //消除的宝箱个数
+    optional int32 longzhu_num = 3; //龙珠获得数量
+    optional int32 level = 4; //当前关卡等级
+    optional int32 max_bets = 5; //下注最大一笔
+
+    optional int32 last_spin_line_count = 6; // 最后一次 线数
+    optional int32 last_spin_bets_num = 7; // 最后一次 赌注
+    optional int32 room_level = 8;
+}
+
+message LZTanBao_SlotGameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 type = 3; //配置类型
+    repeated int32 array1 = 4; // 1: slot 配置
+    repeated int32 room_bet_multiple = 5; //{1,10,100,1000},  1:初级场 2:中级场 3:高级场 4:专业  对应不同的房间底分
+    repeated int32 room_enter_limit = 6; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+    repeated LZTanBao_Status_info longzhu_status_info = 7; //当前状态(数组1,2,3,4对应初级 中级 高级 大师场次)
+}
+
+message LZTanBao_DoOneSpinReq {
+    optional int32 room_level = 1; //初 中 高 大师
+    optional int32 bets_num = 2; //赌注(1/2/5/10/15/20/25)
+    optional int32 line_count = 3; //选的线数(就是加倍数)
+    optional string test_score = 9; //测试使用 发送指定的分数
+}
+
+message Pos {
+    optional int32 x = 1; //行
+    optional int32 y = 2; //列
+}
+
+message gem_item {
+    repeated Pos one_line = 1;
+    optional int32 score = 2; //对应钻石分数
+}
+
+message MatrixDataInfo {
+    repeated OneRowItems matrix_data = 1; //随机出来的二维数组元素
+    repeated gem_item gem_list = 2; //能够得到分数的线上组合
+}
+
+message LZTanBao_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    repeated MatrixDataInfo matrix_data_list = 3; //屏幕显示的二维数组 能够组成的连线
+    optional LZTanBao_Status_info longzhu_status_info = 4; //当前状态
+    optional int32 spin_consume = 5; //消耗的金币数量
+    optional int32 win_multiple = 6; //赢得的倍数
+    optional int32 win_point = 7; //分数
+    optional int32 jackpot_win_point = 8; //jackpot大奖分数
+}
+
+//小游戏(龙穴探宝)
+message LZTanBao_DoTanBaoReq {
+    optional int32 jubaopeng_index = 1; //玩家选择的聚宝盆
+    optional int32 room_level = 2; //初级 中级 高级场 大师场
+}
+
+message LZTanBao_DoTanBaoRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 single_longzhu_coin = 3; //龙珠价格
+    optional int32 longzhu_num = 4; //获取到的龙珠
+}
+
+//日日生财----------------------------------
+message RRShengCai_DoOneSpinReq {
+    optional double bets_num = 1; //赌注(1/2/5/10/15/20/25)
+    optional int32 room_level = 2; //1初级场 2中级场 3高级场
+
+    optional string test_score = 9; //测试使用 发送指定的分数
+}
+
+
+message RRShengCai_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+
+    repeated OneRowItems item_rows = 3; //随机出来的二维数组元素
+
+    optional double win_point = 4; //赢了多少分
+    optional int32 win_free_times = 5; //本次赢得的免费次数
+
+    repeated ScoreGroupOnOneLine score_group_on_lines = 6; //能够得到分数的线上组合
+
+    optional int32 remain_free_spin_times = 10; //剩余总共免费次数
+
+    optional double win_multiple = 11; //赢得的倍数
+
+    optional double spin_consume = 12; //消耗的金币数量
+
+    optional double free_spin_total_win = 13; //免费次数当前累积赢了多少
+    optional bool is_free_spin_end = 14; //免费次数是否已经结束
+
+    optional double jackpot_win_point = 15; //jackpot大奖分数
+    optional bool is_need_select_free_type = 16; //是否需要选择免费转动的类型
+
+}
+
+//请求操作一次bonus game
+message RRShengCai_FreeTypeSelectReq {
+    optional int32 room_level = 1; //1初级场 2中级场 3高级场
+    optional int32 free_type = 2; //选择免费的类型
+
+}
+message RRShengCai_FreeTypeSelectRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 free_type = 3;
+    optional int32 free_spin_times = 4; //免费次数
+    optional double free_spin_multiple = 5; //免费倍数
+}
+
+
+message RRShengCai_SlotGameConfigReq {
+    optional double type = 1; // 配置类型 1: bets 倍数
+}
+
+message RRShengCai_SlotGameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional double type = 4; //配置类型
+    repeated double array1 = 5; // 1: slot 配置
+
+    optional int32 last_spin_line_count = 6; //最后一次线数
+    optional double last_spin_bets_num = 7; // 最后一次 赌注
+    optional int32 last_room_level = 8; // 上次所在房间等级
+
+    optional SlotFreeSpinInfo free_spin_info = 9; // 上线获得的 免费spin 相关信息(有免费次数的时候才会被直接拉入游戏)
+    optional bool is_need_select_free_type = 10; //是否需要选择免费转动的类型
+
+
+    repeated double room_bet_multiple = 11; //{1,10,100,1000},  1:初级场 2:中级场 3:高级场 4:专业  对应不同的房间底分
+    repeated double room_enter_limit = 12; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+    optional double free_spin_multiple = 13; //免费次数的时候的倍数
+}
+
+////////////////////////888 line////////////////////////////////////////////
+message Line888_SlotGameConfigReq {
+    optional int32 type = 1;
+}
+
+message Line888_Status_info {
+    optional int32 total_win = 1; //玩家如果没有收分 下线后再次进入需要给玩家显示出来
+}
+
+message Line888_SlotGameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 type = 4; //配置类型
+    repeated int32 array1 = 5; // 1: slot 配置
+    optional int32 last_spin_line_count = 6; // 最后一次 线数
+    optional int32 last_spin_bets_num = 7; // 最后一次 赌注
+    optional int32 last_room_level = 8; // 上次所在房间等级
+    optional SlotFreeSpinInfo free_spin_info = 9; // 上线获得的 免费spin 相关信息
+    repeated Line888_Status_info line888_status_info = 10; //房间数据
+    repeated int32 room_bet_multiple = 11; //{1,10,100,1000},  1:初级场 2:中级场 3:高级场 4:专业  对应不同的房间底分
+    repeated int32 room_enter_limit = 12; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+}
+
+message Line888_DoOneSpinReq {
+    optional int32 room_level = 1; //初 中 高 大师
+    optional int32 bets_num = 2; //赌注(1/2/5/10/15/20/25)
+    optional int32 line_count = 3; //选的线数(就是加倍数)
+}
+
+message Line888_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 ele_id = 3; //元素id
+    optional int32 win_free_times = 4; //免费次数
+    optional int32 win_multiple = 6; //赢得的倍数
+    optional int32 win_point = 7; //分数（下注分+累积赢分）* 对应图标倍数
+    optional int32 jackpot_win_point = 8; //jackpot大奖分数
+    optional int32 total_win = 9; //如果是Bang元素就自动清空
+    optional int32 spin_consume = 10; //消耗的金币数量
+}
+
+//玩家点击收分 将赢的钱全部提取到身上不在参与继续累积下注中
+message Line888_shoufenReq {
+    optional int32 room_level = 1; //初级 中级 高级场 大师场
+}
+
+message Line888_shoufenRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 shoufen_coin = 3; //收分数量
+}
+////////////////////////大吉大利////////////////////////////////////////////
+message DJDL_SlotGameConfigReq {
+    optional int32 type = 1;
+}
+
+message DJDL_SlotGameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 type = 4; //配置类型
+    repeated int32 array1 = 5; // 1: slot 配置
+    optional int32 last_spin_line_count = 6; // 最后一次 线数
+    optional int32 last_spin_bets_num = 7; // 最后一次 赌注
+    optional int32 last_room_level = 8; // 上次所在房间等级
+    repeated int32 room_bet_multiple = 9; //{1,10,100,1000},  1:初级场 2:中级场 3:高级场 4:专业  对应不同的房间底分
+    repeated int32 room_enter_limit = 10; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+}
+
+message DJDL_DoOneSpinReq {
+    optional int32 bets_num = 1; //赌注(1/2/5/10/15/20/25)
+    optional int32 room_level = 2; //1初级场 2中级场 3高级场
+    optional string test_score = 9; //测试使用 发送指定的分数
+}
+
+message DJDL_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    repeated int32 items = 3; //随机出来的3个元素
+    optional int32 win_multiple = 4; //赢得的倍数
+    optional int32 win_point = 5; //赢得的分数 不包含jackpot
+    optional int32 jackpot_win_point = 6; //jackpot大奖分数
+    optional int32 spin_consume = 7; //消耗的金币数量
+}
+
+//水果机9线(固定线条数)
+///---------------------------------
+// 玛丽小游戏相关
+message Line9_DoOneSpinReq {
+    optional double bets_num = 1; //赌注(1/2/5/10/15/20/25)
+    optional int32 room_level = 2; //1初级场 2中级场 3高级场
+    optional string test_score = 9; //测试使用 发送指定的分数
+}
+
+message Line9_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+
+    repeated OneRowItems item_rows = 3; //随机出来的二维数组元素
+
+    optional double win_point = 4; //赢了多少分
+    optional int32 win_free_times = 5; //免费次数
+
+    repeated ScoreGroupOnOneLine score_group_on_lines = 6; //能够得到分数的线上组合
+
+    optional MaryGameInfo maryGameInfo = 7; // 如果返回该字段 说明 可以玩mary game 了
+
+    optional int32 win_multiple = 8; //赢得的倍数
+
+    optional double spin_consume = 9; //消耗的金币数量
+
+    optional double jackpot_win_point = 10; //jackpot大奖分数
+
+    optional int32 remain_free_spin_times = 11;
+
+    optional bool is_free_spin_end = 12; //免费次数是否已经结束
+    optional double free_spin_total_win = 13;
+}
+
+//请求操作一次小玛丽游戏
+message Line9_MaryGameNextStepReq {
+    optional int32 step = 1; //第几步
+}
+message Line9_MaryGameNextStepRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 step = 3; //请求的步数
+
+    optional bool is_finished = 4; //如果为真 说明 maryGame游戏已经完成
+}
+
+//////////////////////////月光宝盒/////////////////////////////////////////
+message YGBH_SlotGameConfigReq {
+    optional double type = 1; // 配置类型 1: slot
+}
+
+message YGBH_TurnGameInfo {
+    optional bool is_can_turn = 1; //是否可以小玛丽
+    optional int32 suipian_num = 2; //拥有的碎片数量
+    optional double bets_num = 3; //倍数，等于0的时候不可以旋转，大于1的时候可以旋转，这个时候固定
+    repeated double bets_num_list = 4; //获取不同碎片的时候的底分
+}
+
+message YGBH_SlotGameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 theme = 3; // 配置类型 1: slot
+    optional double type = 4; //配置类型
+    repeated double array1 = 5; // 1: slot 配置
+
+    optional int32 last_spin_line_count = 6; // 最后一次 线数
+    optional double last_spin_bets_num = 7; // 最后一次 赌注
+    optional int32 last_room_level = 8; // 上次所在房间等级
+
+    repeated YGBH_TurnGameInfo turnGameInfos = 11; //转盘信息
+    optional SlotFreeSpinInfo free_spin_info = 12; // 上线获得的 免费spin 相关信息
+    optional int32 free_mode_type = 13; //1紫霞模式 2白晶晶模式
+
+    repeated double room_bet_multiple = 14; //{1,10,100,1000},  1:初级场 2:中级场 3:高级场 4:专业  对应不同的房间底分
+    repeated double room_enter_limit = 15; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+
+    optional bool is_need_select_free_type = 16; //是否需要选择免费转动的类型
+
+    optional int32 free_zixi_line_num = 17; //紫霞模式的紫霞数量
+
+}
+
+message YGBH_DoOneSpinReq {
+    optional double bets_num = 1; //赌注(1/2/5/10/15/20/25)
+    optional int32 room_level = 2; //1初级场 2中级场 3高级场
+    optional string test_score = 9; //测试使用 发送指定的分数
+}
+
+message YGBH_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    repeated OneRowItems item_rows = 3; //随机出来的二维数组元素
+    optional double win_point = 4; //赢了多少分
+    optional int32 win_free_times = 5; //免费次数
+    repeated ScoreGroupOnOneLine score_group_on_lines = 6; //能够得到分数的线上组合
+    optional double win_multiple = 8; //赢得的倍数
+    optional double spin_consume = 9; //消耗的金币数量
+    optional double jackpot_win_point = 10; //jackpot大奖分数
+    optional int32 remain_free_spin_times = 11;
+    optional bool is_free_spin_end = 12; //免费次数是否已经结束
+    optional double free_spin_total_win = 13;
+
+    optional YGBH_TurnGameInfo turnGameInfo = 14; //  转盘
+
+    optional bool is_need_select_free_type = 15; //是否需要选择免费转动的类型
+
+    optional int32 free_zixi_line_num = 16; //紫霞模式的紫霞数量
+}
+
+message YGBH_DoTurnReq {
+    optional int32 room_level = 1; //1初级场 2中级场 3高级场
+}
+
+message YGBH_DoTurnRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+
+    optional double win_multiple = 3; //转盘获得的倍数
+    optional double win_point = 4; //转盘获得的分数
+    optional double jackpot_win_point = 5; //转盘获得jackpot
+
+}
+
+//选择免费模式的类型
+message YGBH_FreeTypeSelectReq {
+    optional int32 room_level = 1; //1初级场 2中级场 3高级场
+}
+message YGBH_FreeTypeSelectRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 free_mode_type = 3; //1紫霞，2白骨精
+}
+
+//////////////////////////金瓶梅/////////////////////////////////////////
+//金瓶梅bonus游戏数据
+message JPM_BonusGameInfo {
+    optional int32 can_play_times = 1; //能够玩几次小游戏 默认为1
+    optional int32 cur_step = 2; //当前客户端已经执行到第几步了(初始为0)
+    optional int32 total_step = 3; //总步数
+    optional double score = 4; //总分
+    repeated double bonus_random_score = 5; //3张图片随机的分数
+    optional int32 picture_index = 6; //哪张图片
+}
+
+message RoleInfo {
+    optional int32 rid = 1;
+    optional string rolename = 2;
+    optional string logo = 3;
+    optional double coin = 4;
+}
+
+message JPM_SlotGameConfigReq {
+    optional double type = 1; // 配置类型 1: bets 倍数
+}
+
+message JPM_SlotGameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional double type = 4; //配置类型
+    repeated double array1 = 5; // 1: slot 配置
+
+    optional int32 last_spin_line_count = 6; //最后一次线数
+    optional double last_spin_bets_num = 7; // 最后一次 赌注
+    optional int32 last_room_level = 8; // 上次所在房间等级
+
+    optional SlotFreeSpinInfo free_spin_info = 9; // 上线获得的 免费spin 相关信息
+    optional JPM_BonusGameInfo maryGameInfo = 10; // 上线获得的 上次的bonus信息
+
+    repeated double room_bet_multiple = 11; //{1,10,100,1000},  1:初级场 2:中级场 3:高级场 4:专业  对应不同的房间底分
+    repeated double room_enter_limit = 12; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+
+    repeated RoleInfo role_info_list = 13; //
+}
+
+
+message JPM_DoOneSpinReq {
+    optional double bets_num = 1; //赌注(1/2/5/10/15/20/25)
+    optional int32 line_count = 2; //线数
+    optional int32 room_level = 3; //1初级场 2中级场 3高级场
+    optional string test_score = 4; //测试使用 发送指定的分数
+}
+
+message JPM_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+
+    repeated OneRowItems item_rows = 3; //随机出来的二维数组元素
+
+    optional double win_point = 4; //赢了多少分
+    optional double win_free_times = 5; //免费次数
+
+    repeated ScoreGroupOnOneLine score_group_on_lines = 6; //能够得到分数的线上组合
+
+    optional double win_multiple = 8; //赢得的倍数
+
+    optional double spin_consume = 9; //消耗的金币数量
+
+    optional int32 remain_free_spin_times = 11; //剩余免费次数
+
+    optional bool is_free_spin_end = 12; //免费次数是否已经结束
+
+    optional double free_spin_total_win = 13;
+
+    optional JPM_BonusGameInfo maryGameInfo = 14;
+
+    optional double jackpot_win_point = 15; //jackpot大奖分数
+}
+
+//请求操作一次bonus game
+message JPM_BonusGameNextStepReq {
+    optional int32 step = 1; //客户端 走了 第几步 从1 开始
+    optional int32 box_select = 2; //玩家选择的宝箱
+}
+
+message JPM_BonusGameNextStepRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 step = 3; //请求的步数
+    optional bool is_finished = 4; //如果为真 说明 maryGame游戏已经完成
+}
+
+//玩家进入跟退出发生变化
+message JPM_PlayerChangeNtc {
+    repeated RoleInfo role_info_list = 1;
+}
+
+//金瓶梅进入与退出
+message JPM_StatusReq {
+    optional int32 status = 1; //进入金瓶梅 2退出金瓶梅
+    optional int32 room_level = 2; //房间等级
+}
+
+message JPM_StatusRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+}
+
+//////////////////////////绝地求生/////////////////////////////////////////
+//小游戏信息
+message JDQS_SmallGameInfo {
+    repeated Pos shot_list = 1; //瞄准器的位置
+    repeated int32 kulou_nums = 2; //骷髅数量
+    optional int32 blood_num = 3; //血量
+}
+
+//逃生模式血量
+message JDQS_BloodInfo {
+    optional Pos pos = 1; //元素位置
+    optional int32 off_blood_num = 3; //血量	>0被瞄准的血瓶之类的，=0被瞄准的人，骷髅数量，<0没有被瞄准在外面的wild
+}
+
+//单个波的信息
+message JDQS_MatrixInfo {
+    repeated OneRowItems item_rows = 1; //随机出来的二维数组元素
+    repeated ScoreGroupOnOneLine score_group_on_lines = 2; //能够得到分数的线上组合
+    optional int32 win_point = 3; //赢了多少分
+    optional int32 jackpot_win_point = 4; //jackpot大奖分数
+    optional int32 win_multiple = 5; //赢得的倍数
+    repeated JDQS_BloodInfo blood_infos = 6; //逃生模式血量
+    optional int32 kulou_num = 7; //本次获得骷髅多少
+    optional int32 blood_num = 8; //本次之后的血量
+}
+
+message JDQS_SlotGameConfigReq {
+    optional int32 type = 1; // 配置类型 1: bets 倍数
+}
+
+message JDQS_SlotGameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 type = 4; //配置类型
+    repeated int32 array1 = 5; // 1: slot 配置
+
+    optional int32 last_spin_line_count = 6; //最后一次线数
+    optional int32 last_spin_bets_num = 7; // 最后一次 赌注
+    optional int32 last_room_level = 8; // 上次所在房间等级
+
+    optional SlotFreeSpinInfo free_spin_info = 9; // 上线获得的 免费spin 相关信息
+
+    repeated int32 room_bet_multiple = 11; //{1,10,100,1000},  1:初级场 2:中级场 3:高级场 4:专业  对应不同的房间底分
+    repeated int32 room_enter_limit = 12; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+
+    repeated JDQS_SmallGameInfo small_game_infos = 13; //小游戏数据
+}
+
+message JDQS_DoOneSpinReq {
+    optional int32 bets_num = 1; //赌注(1/2/5/10/15/20/25)
+    optional int32 line_count = 2; //线数
+    optional int32 room_level = 3; //1初级场 2中级场 3高级场
+    optional string test_score = 4; //测试使用 发送指定的分数
+}
+
+message JDQS_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+
+    repeated JDQS_MatrixInfo matrixs = 3; //随机出来的二维数组元素
+
+    optional int32 win_point = 4; //赢了多少分
+    optional int32 win_free_times = 5; //免费次数
+
+    optional int32 win_multiple = 8; //赢得的倍数
+
+    optional int32 spin_consume = 9; //消耗的金币数量
+
+    optional int32 remain_free_spin_times = 11; //剩余免费次数
+
+    optional bool is_free_spin_end = 12; //免费次数是否已经结束
+
+    optional int32 free_spin_total_win = 13;
+
+    optional int32 jackpot_win_point = 14; //jackpot大奖分数
+
+    optional JDQS_SmallGameInfo small_game_info = 15; //瞄准器的位置
+
+    optional int32 free_final_win = 16; //free最后得分
+
+}
+
+//////////////////////////私密约会/////////////////////////////////////////
+message SMYH_SlotGameConfigReq {
+    optional int32 type = 1; // 配置类型 1: bets 倍数
+}
+
+message SMYH_SlotGameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 type = 4; //配置类型
+    repeated int32 array1 = 5; // 1: slot 配置
+
+    optional int32 last_spin_line_count = 6; //最后一次线数
+    optional int32 last_spin_bets_num = 7; // 最后一次 赌注
+    optional int32 last_room_level = 8; // 上次所在房间等级
+
+    optional SlotFreeSpinInfo free_spin_info = 9; // 上线获得的 免费spin 相关信息
+
+    repeated int32 room_bet_multiple = 11; //{1,10,100,1000},  1:初级场 2:中级场 3:高级场 4:专业  对应不同的房间底分
+    repeated int32 room_enter_limit = 12; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+}
+
+message SMYH_DoOneSpinReq {
+    optional int32 bets_num = 1; //赌注(1/2/5/10/15/20/25)
+    optional int32 line_count = 2; //线数
+    optional int32 room_level = 3; //1初级场 2中级场 3高级场
+    optional string test_score = 4; //测试使用 发送指定的分数
+}
+
+message SMYH_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+
+    repeated JDQS_MatrixInfo matrixs = 3; //随机出来的二维数组元素
+
+    optional int32 win_point = 4; //赢了多少分
+    optional int32 win_free_times = 5; //免费次数
+
+    optional int32 win_multiple = 8; //赢得的倍数
+
+    optional int32 spin_consume = 9; //消耗的金币数量
+
+    optional int32 remain_free_spin_times = 11; //剩余免费次数
+
+    optional bool is_free_spin_end = 12; //免费次数是否已经结束
+
+    optional int32 free_spin_total_win = 13;
+
+    optional int32 jackpot_win_point = 14; //jackpot大奖分数
+
+}
+
+//////////////////////////武则天/////////////////////////////////////////
+//武则天bonus游戏数据
+message WUZETIAN_SlotGameConfigReq {
+    optional int32 type = 1; // 配置类型 1: bets 倍数
+}
+
+message WUZETIAN_SlotGameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 type = 4; //配置类型
+    repeated int32 array1 = 5; // 1: slot 配置
+
+    optional int32 last_spin_line_count = 6; //最后一次线数
+    optional int32 last_spin_bets_num = 7; // 最后一次 赌注
+    optional int32 last_room_level = 8; // 上次所在房间等级
+
+    optional SlotFreeSpinInfo free_spin_info = 9; // 上线获得的 免费spin 相关信息
+
+    repeated int32 room_bet_multiple = 10; //{1,10,100,1000},  1:初级场 2:中级场 3:高级场 4:专业  对应不同的房间底分
+    repeated int32 room_enter_limit = 11; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+    optional bool is_gold_free_model = 12; //是否黄金模式
+    repeated int32 gold_free_item_list = 13; // 黄金模式的元素
+    repeated int32 bibei_result_list = 14; // 比倍结果的列表
+}
+
+
+message WUZETIAN_DoOneSpinReq {
+    optional int32 bets_num = 1; //赌注(1/2/5/10/15/20/25)
+    optional int32 line_count = 2; //线数
+    optional int32 room_level = 3; //1初级场 2中级场 3高级场
+    optional string test_score = 4; //测试使用 发送指定的分数
+}
+
+message WUZETIAN_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+
+    repeated OneRowItems item_rows = 3; //随机出来的二维数组元素
+
+    optional int32 win_point = 4; //赢了多少分
+    optional int32 win_free_times = 5; //免费次数
+
+    repeated ScoreGroupOnOneLine score_group_on_lines = 6; //能够得到分数的线上组合
+
+    optional int32 win_multiple = 7; //赢得的倍数
+
+    optional int32 spin_consume = 8; //消耗的金币数量
+
+    optional int32 remain_free_spin_times = 9; //剩余免费次数
+
+    optional bool is_free_spin_end = 10; //免费次数是否已经结束
+
+    optional int32 free_spin_total_win = 11;
+
+    optional int32 jackpot_win_point = 12; //jackpot大奖分数
+
+    optional bool is_gold_free_model = 13; //是否黄金模式
+    repeated int32 gold_free_item_list = 14; // 黄金模式的元素
+
+    optional bool is_can_bibei = 15; //是否黄金模式
+
+    repeated int32 bibei_result_list = 16; // 比倍结果的列表
+
+    optional bool is_gold_free_begin = 17;
+}
+
+//开始 比倍  选择
+message WUZETIAN_DoBibeiReq {
+    optional int32 select_color = 1; //比倍的选择 1:红 2:黑
+    optional int32 select_id = 2; //比倍的选择 1: 方块 2:红桃  3:黑桃 4:梅花
+}
+
+
+message WUZETIAN_DoBibeiRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 select_color = 3; //自己的选择
+    optional int32 select_id = 4; //比倍的选择 1: 方块 2:红桃  3:黑桃 4:梅花
+
+    optional int32 result_color = 5; //色
+    optional int32 result_id = 6; //id
+
+    optional int32 accumulate_point = 7; //累计分数 只有在赢了的情况下才有分
+
+    optional bool is_select_correct = 9; //自己的选择 是否正确
+}
+
+//开始 比倍  选择
+message WUZETIAN_GiveUpBibeiReq {
+
+}
+
+message WUZETIAN_GiveUpBibeiRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 win_point = 3; //累计分数 只有在赢了的情况下才有分
+    optional int32 jackpot_win_point = 4; //jackpot大奖分数
+}
+
+//////////////////////////传奇霸业/////////////////////////////////////////
+//传奇霸业bonus游戏数据
+message CQBY_SlotGameConfigReq {
+    optional int32 type = 1; // 配置类型 1: bets 倍数
+}
+
+message CQBY_SlotGameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 type = 4; //配置类型
+    repeated int32 array1 = 5; // 1: slot 配置
+
+    optional int32 last_spin_line_count = 6; //最后一次线数
+    optional int32 last_spin_bets_num = 7; // 最后一次 赌注
+    optional int32 last_room_level = 8; // 上次所在房间等级
+
+    repeated int32 room_bet_multiple = 10; //{1,10,100,1000},  1:初级场 2:中级场 3:高级场 4:专业  对应不同的房间底分
+    repeated int32 room_enter_limit = 11; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+
+    optional int32 win_multiple = 12; //倍数
+    optional int32 win_point_all = 13; //积分
+    optional int32 sceneid = 14; //选择
+    optional int32 stageid = 15; //选择
+    optional bool is_in_small_game = 16; //是否在小游戏内
+}
+
+
+message CQBY_DoOneSpinReq {
+    optional int32 bets_num = 1; //赌注(1/2/5/10/15/20/25)
+    optional int32 line_count = 2; //线数
+    optional int32 room_level = 3; //1初级场 2中级场 3高级场
+    optional string test_score = 4; //测试使用 发送指定的分数
+}
+
+message CQBY_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+
+    repeated OneRowItems item_rows = 3; //随机出来的二维数组元素
+
+    optional int32 win_point = 4; //赢了多少分
+    optional int32 win_free_times = 5; //免费次数
+
+    repeated ScoreGroupOnOneLine score_group_on_lines = 6; //能够得到分数的线上组合
+
+    optional int32 win_multiple = 7; //赢得的倍数
+
+    optional int32 spin_consume = 8; //消耗的金币数量
+
+    optional int32 jackpot_win_point = 9; //jackpot大奖分数
+
+    optional bool is_get_small_game = 10;
+
+    optional int32 wild_mutil = 11; //奖励的倍数
+}
+
+//开始 比倍  选择
+message CQBY_DoSelectSceneReq {
+    optional int32 select_scene = 1; //选择场景
+}
+
+
+message CQBY_DoSelectSceneRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 select_scene = 3; //自己的选择
+}
+
+//开始 比倍  选择
+message CQBY_DoFightBossReq {
+    optional int32 select_stage = 1; //步数
+}
+
+message CQBY_DoFightBossRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 win_point = 3; //当前BOSS分
+    optional int32 jackpot_win_point = 4; //jackpot大奖分数
+    optional int32 win_point_all = 5; //积累分
+    optional int32 sceneid = 6; //
+    optional int32 stageid = 7; //
+    optional int32 win_multiple = 8; //
+    optional int32 line_win_point = 9; //
+}
+
+//*************************捕鱼*************************//
+
+message CurrentFish {
+    optional int32 rid = 1; //玩家id  (服务器锁定鱼使用)
+    optional int32 fish_group = 2; //鱼组编号
+    optional int32 fish_flag = 3; //鱼编号
+    optional int32 only_number = 4; //鱼唯一编号
+    optional int32 progress = 5; //鱼投放时长（已经投放了时间）
+    optional int32 status = 6; //鱼是否锁定
+    optional string CategoryBitmask = 7; //CategoryBitmask
+    optional string ContactTestBitmask = 8; //ContactTestBitmask
+}
+
+
+message FishPlayerInfo { //调整武器位置
+                         optional int32 rid = 1; //玩家id
+                         optional int32 pay_times = 2; //当前炮倍
+                         optional int32 weapon_type = 3; //当前武器类型（用于炮台类型 值越大 越翻倍）
+                         optional int32 coin = 4; //当前炮倍金币
+                         optional float angle = 5; //角度
+                         optional string rolename = 6; //玩家rolename
+                         optional double coins = 7; //玩家金币数
+                         optional int32 index = 8; //座位号
+}
+
+
+message PushFishGroup { //投放新鱼
+                        optional bool btide = 1; //当前是否鱼潮
+                        optional int32 only_number = 2; //唯一编号 递 +
+                        optional int32 fish_group = 3; //鱼组编号
+}
+
+
+message FishWeaponInfo { //调整武器位置
+                         optional int32 rid = 1; //玩家id
+                         optional int32 game_type = 2; //房间类型
+                         optional int32 pay_times = 3; //当前炮倍
+                         optional int32 weapon_type = 4; //当前武器类型（用于炮台类型 值越大 越翻倍）
+                         optional int32 coin = 5; //当前金币
+}
+
+
+message FishWeapon { //开炮了+攻击中鱼
+                     optional int32 rid = 1; //玩家id
+                     optional int32 game_type = 2; //房间类型
+                     optional int32 fish_group = 3; //鱼组编号
+                     optional int32 fish_flag = 4; //鱼编号
+                     optional float angle = 5; //角度
+                     optional int32 pay_times = 6; //当前炮倍
+                     optional int32 weapon_type = 7; //当前武器类型（用于炮台类型）
+                     optional CurrentFish lock_fish = 8; //锁定的鱼（客户端选填 + 服务器负责转发    可能没有这个值哦）
+                     optional int32 coin = 9; //当前金币
+                     optional int32 only_number = 10; //服务器下发的唯一编号
+                     optional int32 x = 11; //x
+                     optional int32 y = 12; //y
+                     optional string bitmask = 13; //bitmask
+}
+
+message FishGeneral {
+    //捕鱼通用消息
+    optional int32 ivalue = 1; //可选值
+    optional bool bvalue = 2; //可选值
+}
+
+message FishDeath {
+    //鱼死亡
+    optional int32 rid = 1; //玩家id
+    optional int32 fish_group = 2; //鱼组编号
+    optional int32 fish_flag = 3; //鱼编号
+    optional int32 win_coin = 4; //赢的金币
+    optional int32 body_coin = 5; //身上的金币
+    optional int32 pay_times = 6; //炮倍
+    optional int32 weapon_type = 7; //当前武器类型（用于炮台类型）
+    optional int32 only_number = 8; //服务器下发的唯一编号
+    optional bool death = 9; //是否死亡
+}
+
+message FishOpenFire {
+    optional int32 rid = 1; //玩家id
+    optional float angle = 2; //角度
+    optional int32 coin = 3; //当前金币
+    optional int32 weapon_type = 4; //当前武器类型（用于炮台类型）
+    optional int32 pay_times = 5; //炮倍
+    optional int32 x = 6; //x
+    optional int32 y = 7; //y
+    optional string bitmask = 8; //bitmask
+}
+
+message FishScreenPlayerInfo { //屏幕鱼信息 + 玩家信息
+                               repeated CurrentFish fishs = 1; //当前鱼信息
+                               repeated FishPlayerInfo players = 2; //当前玩家信息
+}
+
+message FishSpecialDeath {
+    optional int32 only_number = 1; //服务器下发的唯一编号
+    optional int32 fish_flag = 2; //鱼编号
+    optional int32 win_coin = 3; //赢的鱼金币（服务器使用）
+    optional int32 special_type = 4; //属于什么类型炸弹
+}
+
+message FishGroupDeath {
+    //指定区域鱼死亡
+    optional int32 rid = 1; //玩家id（服务器使用）
+    optional int32 only_number = 2; //服务器下发的唯一编号（客户端提交使用）
+    optional int32 fish_flag = 3; //鱼编号（客户端提交使用）
+    optional int32 game_type = 4; //房间类型
+    repeated FishSpecialDeath deaths = 5; //死鱼集合
+    optional int32 pay_times = 6; //炮倍
+    optional int32 weapon_type = 7; //当前武器类型（用于炮台类型）
+    optional int32 win_coin = 8; //赢的鱼总金币（服务器使用）
+    optional int32 body_coin = 9; //当前金币
+
+}
+
+//获取捕鱼的房间配置
+message FISH_GameConfigReq {
+    optional int32 type = 1; // 配置类型 1: slot
+}
+
+message FISH_GameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 theme = 3; // 配置类型 1: slot
+    optional int32 type = 4; //配置类型
+
+    repeated int32 array1 = 5; // 1: slot 配置
+    repeated int32 room_bet_multiple = 6; //{1,10,100,1000},  1:初级场 2:中级场 3:高级场 4:专业  对应不同的房间底分
+    repeated int32 room_enter_limit = 7; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+}
+
+//客户端-》服务器 捕鱼操作（注意：玩家发射子弹累计筹码 不能小于 攻击鱼累计筹码）
+message DoFishOperationReq {
+    optional int32 command = 1; //命令号
+    optional Version version = 2;
+    optional int32 id = 3;
+    optional string roomsvr_id = 4; //房间服务器id
+    optional int32 roomsvr_table_address = 5; //桌子的服务器地址
+    optional FishGeneral request_fish_info = 6; //请求当前屏幕鱼信息（适用于进房间和唤醒）
+    optional FishWeaponInfo weapon_info = 7; //当前炮台信息（服务器转发广播 + 记录保存玩家信息中）
+    optional FishWeapon open_fire = 8; //开炮了（服务器转发广播 + 服务器扣除相应道具）
+    optional FishWeapon attack_fish = 9; //客户端打中鱼（服务器转发广播 + 校验是否打中鱼）
+    optional CurrentFish lock_fish = 10; //锁定鱼（服务器转发广播 + 客户端要过滤掉挡住路径鱼）
+    optional FishGroupDeath special_fish_death = 11; //客户端打区域鱼或者所有同类鱼使用该命令
+}
+
+//服务器-》客户端
+message DoFishOperationRes {
+    optional int32 command = 1; //命令号
+    optional int32 errcode = 2; //错误原因 0表示成功
+    optional string errcodedes = 3; //错误描述
+    optional FishScreenPlayerInfo fish_info = 4; //当前屏幕鱼信息（适用于进房间和唤醒）
+    optional FishWeaponInfo weapon_info = 5; //当前炮台信息（服务器转发广播 + 记录保存玩家信息中）
+    optional FishOpenFire open_fire = 6; //开炮了（服务器转发广播 + 服务器扣除相应道具）
+    optional FishDeath fish_death = 7; //鱼死了（服务器逻辑计算 + 广播 ）
+    optional CurrentFish lock_fish = 8; //锁定鱼（服务器转发广播 + 客户端要过滤掉挡住路径鱼）
+    optional PushFishGroup push_fish_group = 9; //服务器推送鱼
+    optional FishGeneral tide = 10; //鱼潮要来了（客户端需要马上清空鱼）
+    optional FishGroupDeath special_fish_group_death = 11; //客户端打区域鱼或者所有同类鱼使用该命令
+    optional FishSpecialDeath special_fish_death = 12; //客户端可以启用特殊鱼杀死了
+}
+
+//5分钟未开炮将玩家T出房间
+message DoFishKickPlayerLeaveTableNtc {
+    optional string msg = 1; //您已经5分钟没有发射炮弹，先休息一会儿吧
+}
+
+//---------------------功夫熊猫---------------------------------
+//功夫熊猫bonus游戏数据
+message GFXM_BonusGameInfo {
+    repeated OneRowItems bonus_multiple_array = 1; //bonus游戏需要显示的行,其中>1000数字代表红色宝箱,减去 1000 以后就是实际倍数,每行的第一个数字就是玩家一定选中的宝箱
+    optional int32 cur_step = 2; //当前客户端已经执行到第几步了(初始为0)
+    optional int32 bonus_init_free_times = 3; //剩余bonus 玩耍次数
+    repeated int32 box_select_array = 4; // 执行的步数里面玩家选择的宝箱
+}
+
+message GFXM_SlotGameConfigReq {
+    optional int32 type = 1; // 配置类型 1: bets 倍数
+}
+
+message GFXM_SlotGameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 type = 4; //配置类型
+    repeated int32 array1 = 5; // 1: slot 配置
+
+    optional int32 last_spin_line_count = 6; //最后一次线数
+    optional int32 last_spin_bets_num = 7; // 最后一次 赌注
+    optional int32 last_room_level = 8; // 上次所在房间等级
+
+    optional SlotFreeSpinInfo free_spin_info = 9; // 上线获得的 免费spin 相关信息
+    optional GFXM_BonusGameInfo bonus_game_info = 10; // 上线获得的 上次的bonus信息
+
+    repeated int32 room_bet_multiple = 11; //{1,10,100,1000},  1:初级场 2:中级场 3:高级场 4:专业  对应不同的房间底分
+    repeated int32 room_enter_limit = 12; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+}
+
+
+message GFXM_DoOneSpinReq {
+    optional int32 bets_num = 1; //赌注(1/2/5/10/15/20/25)
+    optional int32 room_level = 2; //1初级场 2中级场 3高级场
+
+    optional string test_score = 9; //测试使用 发送指定的分数
+}
+
+message GFXM_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+
+    repeated OneRowItems item_rows = 3; //随机出来的二维数组元素
+
+    optional int32 win_point = 4; //赢了多少分
+    optional int32 win_free_times = 5; //本次赢得的免费次数
+
+    repeated int32 score_eles_pos = 6; // 用一维数组对应二维矩阵 ,15 个元素的数组,反应在矩阵中 从第一行开始,从左往右15个元素,如果该位置是属于得分,元素 就是1 否则就是0
+    optional int32 remain_free_spin_times = 10; //剩余总共免费次数
+
+    optional int32 win_multiple = 11; //赢得的倍数
+
+    optional int32 spin_consume = 12; //消耗的金币数量
+
+    optional int32 free_spin_total_win = 13; //免费次数当前累积赢了多少
+    optional bool is_free_spin_end = 14; //免费次数是否已经结束
+
+    repeated OneRowItems bonus_multiple_array = 15; //bonus游戏需要显示的行,其中>1000数字代表红色宝箱,减去 1000 以后就是实际倍数,每行的第一个数字就是玩家一定选中的宝箱
+    optional int32 bonus_init_free_times = 16; //初始剩余 bonus play 次数,该字段不为0 可以判断是否进入bonus游戏
+
+    optional int32 jackpot_win_point = 17; //jackpot大奖分数
+
+}
+
+//功夫熊猫 请求操作一次bonus game
+message GFXM_BonusGameNextStepReq {
+    optional int32 step = 1; //客户端 走了 第几步 从1 开始
+    optional int32 box_select = 2; //玩家选择的宝箱
+    optional int32 total_step = 3; //总步数
+}
+message GFXM_BonusGameNextStepRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 step = 3; //当前已经走到了那一步
+    optional bool is_finished = 4; //如果为真 说明 小游戏已经完成
+}
+
+////////////////////龙虎///////////////////////
+//龙虎的玩家信息
+message LHPlayerInfo {
+    optional int32 rid = 1; //rid
+    optional string rolename = 2; //玩家名
+    optional string logo = 3; //logo
+    optional int32 lucky = 4; //是否为幸运星的标志位
+    optional double win_num_20 = 5; //近20局的胜场
+    optional double total_score_20 = 6; //近20局的总下注
+    optional double coins = 7; //总持有金币数 or 在结算消息时表示赢得金币数
+    optional int32 bigwinner = 8; //是否为大赢家的标志位
+    optional double win_point = 9; //当局赢分
+    optional int32 vip_level = 10; //vip等级
+}
+
+
+message LHTablePlayerNtc {
+    optional int32 isend = 1; //区别是否为结算消息的标志位
+    repeated LHPlayerInfo list = 2; //玩家数据列表
+    optional LHRoadNode hh_road = 3; //写路
+    optional LHPlayerInfo player_info = 4; //玩家自己的数据
+}
+
+//龙虎双方的牌
+message LHAllCardsNtc {
+    repeated int32 long_cards = 1; //龙的牌
+    repeated int32 hu_cards = 2; //虎的牌
+}
+
+//---------------------埃及夺宝---------------------------------
+//埃及夺宝bonus游戏数据
+message AJDB_SmallItemInfo {
+    optional int32 id = 1; //ID
+    optional bool isopen = 2; //是否点亮
+}
+
+//附盘一条线的信息
+message AJDB_SmallLineInfo {
+    repeated AJDB_SmallItemInfo infos = 1; //ID
+    optional int32 mutiple = 2; //点亮之后，才有，倍数
+}
+
+//附盘一条线的信息
+message AJDB_SmallGameInfo {
+    repeated AJDB_SmallLineInfo lines = 1; // 所有附线的信息
+}
+
+message AJDB_SlotGameConfigReq {
+    optional int32 type = 1; // 配置类型 1: bets 倍数
+}
+
+message AJDB_SlotGameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 type = 4; //配置类型
+    repeated int32 array1 = 5; // 1: slot 配置
+
+    optional int32 last_spin_line_count = 6; //最后一次线数
+    optional int32 last_spin_bets_num = 7; // 最后一次 赌注
+    optional int32 last_room_level = 8; // 上次所在房间等级
+
+    repeated AJDB_SmallGameInfo all_smallgames = 9; // 子游戏信息
+
+    repeated int32 room_bet_multiple = 10; //{1,10,100,1000},  1:初级场 2:中级场 3:高级场 4:专业  对应不同的房间底分
+    repeated int32 room_enter_limit = 11; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+}
+
+
+message AJDB_DoOneSpinReq {
+    optional int32 bets_num = 1; //赌注(1/2/5/10/15/20/25)
+    optional int32 room_level = 2; //1初级场 2中级场 3高级场
+
+    optional string test_score = 9; //测试使用 发送指定的分数
+}
+
+message AJDB_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+
+    repeated OneRowItems item_rows = 3; //随机出来的二维数组元素
+
+    optional int32 win_point = 4; //赢了多少分
+
+    repeated int32 score_eles_pos = 5; // 用一维数组对应二维矩阵 ,15 个元素的数组,反应在矩阵中 从第一行开始,从左往右15个元素,如果该位置是属于得分,元素 就是1 否则就是0
+
+    optional int32 win_multiple = 6; //赢得的倍数
+
+    optional int32 spin_consume = 7; //消耗的金币数量
+
+    repeated ScoreGroupOnOneLine score_group_on_lines = 8; //能够得到分数的线上组合
+
+    repeated AJDB_SmallLineInfo cur_other_lines = 9; // 所有附线的信息
+
+    repeated AJDB_SmallLineInfo next_other_lines = 10; // 刷新之后所有附线的信息
+
+    optional int32 base_win_point = 11; //基础赢了多少，如果没有转盘，则应该和win_point一样
+}
+
+//---------------------埃及夺宝---------------------------------
+//---------------------begin 水果机11线--------------------------------
+message Fruit_Line11_DoOneSpinReq {
+    optional int32 line_count = 1; //线数(1~9)
+    optional double bets_num = 2; //赌注 分别为100/200/300/400/500
+    optional int32 room_level = 3; //1初级场 2中级场 3高级场
+}
+
+message Fruit_Line11_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+
+    repeated OneRowItems item_rows = 3; //随机出来的二维数组元素
+
+    optional double win_point = 4; //赢了多少分
+    optional int32 win_free_times = 5; //免费次数
+
+    repeated ScoreGroupOnOneLine score_group_on_lines = 6; //能够得到分数的线上组合
+
+    optional double bonus_multiple = 7; //最后得分是 bonus_multiple * bonus_score
+    repeated double bonus_score_list = 8; // 已经给客户端指定了 随机的分数 ,不管玩家怎么选 都是这个分了
+    repeated double bonus_random_score = 9; // 宝箱随机的分数(数组) (目前是 1-9 个分数,客户端需要将该分数顺序打乱)
+
+    optional int32 remain_free_spin_times = 10; //剩余免费次数
+
+    optional int32 win_multiple = 11; //赢得的倍数
+
+    optional double spin_consume = 12; //消耗的金币数量
+
+    optional double quanpan_win_point = 13; //全盘奖励
+
+    repeated double score_eles_pos = 14; //
+
+    optional bool is_free_spin_end = 15; //免费次数是否已经结束
+
+    optional double free_spin_total_win = 16; //免费次数当前累积赢了多少
+}
+
+//请求操作一次开箱子
+message Fruit_Line11_SlotBounsScoreReq {
+
+}
+
+message Fruit_Line11_SlotBounsScoreRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional double score = 3; // 开箱子加了多少分
+}
+//---------------------end 水果机11线--------------------------------
+
+//冰球突破begin----------------------------------
+
+message BQTP_SlotGameConfigReq {
+    optional int32 type = 1; // 配置类型 1: bets 倍数
+}
+
+message BQTP_SlotGameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 type = 4; //配置类型
+    repeated double array1 = 5; // 1: slot 配置
+
+    optional int32 last_spin_line_count = 6; //最后一次线数
+    optional double last_spin_bets_num = 7; // 最后一次 赌注
+    optional int32 last_room_level = 8; // 上次所在房间等级
+
+    optional SlotFreeSpinInfo free_spin_info = 9; // 上线获得的 免费spin 相关信息
+
+    repeated double room_bet_multiple = 11; //{1,10,100,1000},  1:初级场 2:中级场 3:高级场 4:专业  对应不同的房间底分
+    repeated double room_enter_limit = 12; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+}
+
+//单个波的信息
+message BQTP_MatrixInfo {
+    repeated OneRowItems item_rows = 1; //随机出来的二维数组元素
+    repeated int32 score_eles_pos = 2; // 用一维数组对应二维矩阵 ,15 个元素的数组,反应在矩阵中 从第一行开始,从左往右15个元素,如果该位置是属于得分,元素 就是1
+    optional double win_point = 3; //赢了多少分
+    optional int32 win_multiple = 4; //赢得的倍数
+}
+
+message BQTP_DoOneSpinReq {
+    optional double bets_num = 1; //赌注(1/2/5/10/15/20/25)
+    optional int32 room_level = 2; //1初级场 2中级场 3高级场
+
+    optional string test_score = 3; //测试使用 发送指定的分数
+}
+
+
+message BQTP_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+
+    repeated OneRowItems item_rows = 3; //随机出来的二维数组元素
+
+    optional double win_point = 4; //赢了多少分
+
+    optional int32 win_free_times = 5; //本次赢得的免费次数
+
+    repeated BQTP_MatrixInfo matrixs = 6; //随机出来的二维数组元素
+
+    optional int32 remain_free_spin_times = 10; //剩余总共免费次数
+
+    optional double win_multiple = 11; //赢得的倍数
+
+    optional double spin_consume = 12; //消耗的金币数量
+
+    optional double free_spin_total_win = 13; //免费次数当前累积赢了多少
+    optional bool is_free_spin_end = 14; //免费次数是否已经结束
+
+}
+
+////冰球突破end----------------------------------
+
+//////////////////////////三倍猴子/////////////////////////////////////////
+message ARSBHZ_SlotGameConfigReq {
+    optional int32 type = 1; // 配置类型 1: slot
+}
+
+
+message ARSBHZ_SlotGameConfigRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    optional int32 theme = 3; // 配置类型 1: slot
+    optional int32 type = 4; //配置类型
+    repeated double array1 = 5; // 1: slot 配置
+
+    optional int32 last_spin_line_count = 6; // 最后一次 线数
+    optional int32 last_spin_bets_num = 7; // 最后一次 赌注
+
+    optional SlotFreeSpinInfo free_spin_info = 8; // 上线获得的 免费spin 相关信息
+
+    optional double room_enter_limit = 9; //各个房间的最小携带 _ 与room_bet_multiple对应的场次类型一样
+
+    repeated OneRowItems item_rows = 10; //随机出来的二维数组元素
+}
+
+message ARSBHZ_DoOneSpinReq {
+    optional double bets_num = 1; //赌注(1/2/5/10/15/20/25)
+    optional string test_score = 2; //测试使用 发送指定的分数
+}
+
+message ARSBHZ_DoOneSpinRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    repeated OneRowItems item_rows = 3; //随机出来的二维数组元素
+    optional double win_point = 4; //赢了多少分
+    optional int32 win_free_times = 5; //免费次数
+    repeated ScoreGroupOnOneLine score_group_on_lines = 6; //能够得到分数的线上组合
+    optional int32 win_multiple = 7; //赢得的倍数
+    optional double spin_consume = 8; //消耗的金币数量
+
+    optional double jackpot_win_point = 9; //jackpot大奖分数
+    optional int32 remain_free_spin_times = 10;
+    optional bool is_free_spin_end = 11; //免费次数是否已经结束
+    optional int32 free_spin_total_win = 12;
+    optional int32 free_all_times = 13;
+}
+
+//---------------------三倍猴子---------------------------------
+
+//点击后查看桌子信息
+message BlackJack21_tablesReq {
+    optional int32 page_index = 1;//添加分页处理
+    optional int32 page_size = 2;//每页需要显示的值
+}
+
+message BlackJack21_TableInfo {
+    optional int32 id = 2; //roomsvr_table_id桌子id编号
+    optional string roomsvr_id = 3; //房间服务器id
+    optional int32 roomsvr_table_address = 4; //桌子的服务器地址
+    optional int32 current_num = 5; //当前人数
+    repeated double bet_nums = 6; //下注档档次
+    optional int32 state = 7; //桌子的状态（1进行中 2等待开始 3禁止进入房间）
+    repeated string logo_list = 8; //每个座位的(1~7位置的玩家 8位庄家)
+    repeated string zhuang_way_list = 9; //庄路数
+    optional int32 is_del_table = 10;//是否改桌子被删除掉（BlackJack21_tablesNtc 使用 true删除该桌子）
+    optional int32 is_new_table = 11;//这是张新桌子
+    optional int32 game_type = 12;//桌子id(使用game_type与老代码一致)
+    repeated int32 limitRange = 13;//下注范围
+}
+
+message BlackJack21_tablesRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+    repeated BlackJack21_TableInfo table_list = 3; //桌子列表
+}
+
+message BlackJack21_tablesNtc {
+	optional BlackJack21_TableInfo table_info = 1;//桌子变化的(哪张桌子变化了就修改哪张桌子)
+}
+
+message BlackJack21_ClientPage_Req {
+    optional int32 page_index = 1;//玩家正在第几页
+}
+
+message BlackJack21_ClientPage_Res {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; // 错误描述
+}
+
+//快速开始请求
+message BlackJackQuickStartReq {
+}
+
+message BlackJackQuickStartRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional int32 id = 3;
+    optional string roomsvr_id = 4; //房间服务器id
+    optional int32 roomsvr_table_address = 5; //桌子的服务器地址
+}
+
+
+//请求进入桌子
+message EnterTableReq {
+    optional Version version = 1;
+    optional int32 id = 2;
+    optional string roomsvr_id = 3; //房间服务器id
+    optional int32 roomsvr_table_address = 4; //桌子的服务器地址
+    optional int32 invite_id = 5; //邀请者id
+}
+
+//响应进入桌子
+message EnterTableRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional GameInfo gameinfo = 3;
+    optional int32 creator_prompter_type = 4; //房主是否是推广员 1 就是 0 不是
+}
+
+//请求断线重连进入桌子
+message ReenterTableReq {
+    optional Version version = 1;
+    optional string roomsvr_id = 2; //房间服务器id
+    optional int32 roomsvr_table_address = 3; //桌子的服务器地址
+}
+
+//响应断线重连进入桌子
+message ReenterTableRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional GameInfo gameinfo = 3;
+}
+
+//请求坐入桌子
+message SitdownTableReq {
+    optional Version version = 1;
+    optional int32 id = 2;
+    optional string roomsvr_id = 3; //房间服务器id
+    optional int32 roomsvr_table_address = 4; //桌子的服务器地址
+    optional int32 roomsvr_seat_index = 5; //指定座位位置
+}
+
+//响应坐入桌子
+message SitdownTableRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//请求从桌子站起
+message StandupTableReq {
+    optional Version version = 1;
+    optional int32 id = 2;
+    optional string roomsvr_id = 3; //房间服务器id
+    optional int32 roomsvr_table_address = 4; //桌子的服务器地址
+}
+
+//响应从桌子站起
+message StandupTableRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+}
+
+//请求离开桌子
+message LeaveTableReq {
+    optional Version version = 1;
+    optional int32 id = 2;
+    optional string roomsvr_id = 3; //房间服务器id
+    optional int32 roomsvr_table_address = 4; //桌子的服务器地址
+    optional bool is_switch = 5; //是否为换桌请求的标志位
+}
+
+//响应离开桌子
+message LeaveTableRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    optional bool is_switch = 3; //是否为换桌请求的标志位
+}
+
+//请求牌路
+message BlackjackWayReq {
+}
+
+message PlayerWayInfo {
+    optional int32 obj_seat = 1;
+    repeated string player_way_list = 2;
+}
+
+message BlackjackWayRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated string banker_way_list = 3; //庄路数
+    repeated PlayerWayInfo players_way_list = 4;//玩家牌路
+}
+
+//查询BlackJack历史记录
+message BlackjackHistoryReq {
+    optional int32 type_id = 1;//1今天 2最近7天 3最近30天 4自定义
+    optional int32 begin_time = 2;
+    optional int32 end_time = 3;
+    optional int32 page_index = 4;//添加分页处理
+    optional int32 page_size = 5;//每页需要显示的值
+    optional int32 id = 6;//数据库中的id,第一次page_index=1不需要带，page_index >=2 就需要了
+}
+
+message BlackJackWinInfo {
+    optional int32 obj_seat = 1;
+    optional double win_num = 2;//当局输赢值
+
+    optional double bet_insurance_num = 3;//下注保险额度
+    optional double win_insurance_nums = 4;//保险赢取的值
+
+    repeated int32 cards_1 = 5;//牌
+    optional int32 point_1 = 6;//点数
+    optional double bet_num_1 = 7;//下注金额
+    optional double hand_win_num_1 = 8;//第1收牌的输赢值
+    optional string victory_1 = 9;//胜:1 负:-1 平:0
+    optional int32 is_double_bet1 = 10;//是双倍下注:1 不是:0
+
+    repeated int32 cards_2 = 11;
+    optional int32 point_2 = 12;//点数
+    optional double bet_num_2 = 13;//下注金额
+    optional double hand_win_num_2 = 14;//第2收牌的输赢值
+    optional string victory_2 = 15;//胜:1 负:-1 平:0
+    optional int32 is_double_bet2 = 16;//是双倍下注:1 不是:0
+}
+
+message BlackjackRoundsInfo {
+    optional int32 update_time = 1;//记录时间
+    optional string round_id = 2;//牌局单号
+    optional double bet_num = 3;//下注值
+    optional double win_num = 4;//输赢值(正数表示盈利 负数表示输值)
+    optional double coins = 5;//玩家金币
+    //optional double valid_bet_nums = 6;//有效投注
+    repeated BlackJackWinInfo win_info_list = 6;//输赢情况
+}
+
+message BlackjackHistoryRes {
+    optional int32 errcode = 1; //错误原因 0表示成功
+    optional string errcodedes = 2; //错误描述
+    repeated BlackjackRoundsInfo players_rounds_list = 3;//玩家牌局记录
+    optional int32 id = 4;//数据库中的id,供服务器使用
+
+    optional double total_bet = 5;//总下注
+    optional double total_payout = 6;//总派彩
+    optional double total_win = 7;//总输赢
+}
