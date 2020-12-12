@@ -7,6 +7,13 @@
             "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}",
             "preLaunchTask": "egret: build"
+        },
+        {
+        	"type": "pwa-chrome",
+        	"request": "launch",
+        	"name": "Egret Debug(pwa-chrome)",
+        	"url": "http://127.0.0.1:7000/index.html",
+        	"webRoot": "${workspaceFolder}"
         }
     ],
     "version": "0.2.0"
