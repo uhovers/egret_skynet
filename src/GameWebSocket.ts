@@ -1,6 +1,6 @@
 // import XXTea from "./XXTea";
 
-let Uint8ArrayToString = function (fileData) {
+let _Uint8ArrayToString = function (fileData) {
     let dataString = "";
     for (let i = 0; i < fileData.length; i++) {
         dataString += String.fromCharCode(fileData[i]);
@@ -8,7 +8,7 @@ let Uint8ArrayToString = function (fileData) {
     return dataString
 }
 
-let stringToUint8Array = function (str) {
+let _stringToUint8Array = function (str) {
     let arr = [];
     for (let i = 0, j = str.length; i < j; ++i) {
         arr.push(str.charCodeAt(i));
@@ -36,8 +36,8 @@ class GameWebSocket {
         webSocket.addEventListener(egret.Event.CONNECT, this.onSocketOpen, this);
         webSocket.addEventListener(egret.Event.CLOSE, this.onSocketClose, this);
         webSocket.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onSocketError, this);
-        // webSocket.connect("121.40.230.243", 11301);
-        webSocket.connect("echo.websocket.org", 80);
+        webSocket.connect("121.40.230.243", 11301);
+        // webSocket.connect("echo.websocket.org", 80);
         this.webSocket = webSocket;
     }
 
@@ -69,9 +69,9 @@ class GameWebSocket {
         let resultData = byte.bytes
 
         //解密
-        let ss = Uint8ArrayToString(resultData);
+        let ss = _Uint8ArrayToString(resultData);
         ss = this.xxtea.decrypt(ss);
-        resultData = stringToUint8Array(ss);
+        resultData = _stringToUint8Array(ss);
         
         // 提取前两个字节，包头长度
         let headLength = 0;
@@ -182,9 +182,9 @@ class GameWebSocket {
         }
 
         //加密
-        let ss = Uint8ArrayToString(sendData);
+        let ss = _Uint8ArrayToString(sendData);
         ss = this.xxtea.encrypt(ss);
-        let data = stringToUint8Array(ss);
+        let data = _stringToUint8Array(ss);
 
         let byteArray:egret.ByteArray = new egret.ByteArray(data);
         this.webSocket.writeBytes(byteArray);

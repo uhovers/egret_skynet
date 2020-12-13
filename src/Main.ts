@@ -147,7 +147,7 @@ class Main extends egret.DisplayObjectContainer {
         this.testProto()
     }
 
-    private testProto() {
+    private async testProto() {
         // let person: cs.Person = new cs.Person();
         // let pwirter:protobuf.Writer = new protobuf.Writer();
 
@@ -177,7 +177,13 @@ class Main extends egret.DisplayObjectContainer {
         // let deLoginReq: GameMsg.LoginReq = GameMsg.LoginReq.decode(sendByte);
         // console.log('解密', deLoginReq);
 
-        let game = new GameWebSocket();
+        // let game = new GameWebSocket();
+        let net = new NetProxy();
+        net.init();
+        setTimeout(async () => {
+            let data = await net.LoginReq();
+            console.log('111111: ', data);
+        }, 1000);        
     }
 
 

@@ -15,6 +15,9 @@
 		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
 		"bin-debug/Platform.js",
-		"bin-debug/XXTea.js"
+		"bin-debug/net/GNetwork.js",
+		"bin-debug/net/GWebSocket.js",
+		"bin-debug/net/NetProxy.js",
+		"bin-debug/net/XXTea.js"
 	]
 }
